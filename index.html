@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BusCount - Destinos</title>
+    <title>BusCount - Completo</title>
     <style>
         :root { --p: #ff9800; --bg: #000; --c: #1a1a1a; --txt: #fff; }
         body { background: var(--bg); color: var(--txt); font-family: sans-serif; margin: 0; padding: 15px; text-align: center; }
@@ -12,35 +12,28 @@
         .pantalla { display: none; }
         .activa { display: block !important; }
         
-        .tarjeta { background: var(--c); padding: 20px; border-radius: 15px; border: 1px solid #333; margin-bottom: 12px; }
+        .tarjeta { background: var(--c); padding: 15px; border-radius: 15px; border: 1px solid #333; margin-bottom: 12px; }
         
-        .letrero-vuelta { font-size: 1.6rem; color: var(--p); font-weight: bold; text-transform: uppercase; margin-bottom: 10px; }
+        .letrero-vuelta { font-size: 1.5rem; color: var(--p); font-weight: bold; text-transform: uppercase; margin-bottom: 10px; }
         
-        /* Estilo para el Selector de Destino */
         .selector-destino {
-            background: #222;
-            color: var(--p);
-            border: 1px solid var(--p);
-            padding: 12px;
-            width: 100%;
-            font-size: 1.3rem;
-            font-weight: bold;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            text-align: center;
+            background: #222; color: var(--p); border: 1px solid var(--p);
+            padding: 12px; width: 100%; font-size: 1.2rem; font-weight: bold;
+            border-radius: 10px; margin-bottom: 10px; text-align: center;
         }
 
         .monto-actual { font-size: 3.5rem; color: var(--p); font-weight: bold; margin: 10px 0; }
         
-        .btn { border: none; padding: 20px; border-radius: 12px; font-weight: bold; width: 100%; margin-top: 10px; cursor: pointer; font-size: 1.2rem; }
+        .btn { border: none; padding: 18px; border-radius: 12px; font-weight: bold; width: 100%; margin-top: 10px; cursor: pointer; font-size: 1.1rem; }
         .btn-naranja { background: var(--p); color: #000; }
         .btn-gris { background: #333; color: #fff; }
+        .btn-azul { background: #0288d1; color: #fff; }
         .btn-rojo { background: #b71c1c; color: #fff; }
 
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .campo { background: #222; padding: 10px; border-radius: 10px; border: 1px solid #444; }
-        input { background: #000; color: var(--p); border: 1px solid var(--p); padding: 12px; width: 80%; font-size: 1.8rem; text-align: center; border-radius: 8px; }
-        label { display: block; font-size: 0.9rem; color: #888; margin-bottom: 5px; font-weight: bold; }
+        input { background: #000; color: var(--p); border: 1px solid var(--p); padding: 10px; width: 80%; font-size: 1.6rem; text-align: center; border-radius: 8px; }
+        label { display: block; font-size: 0.8rem; color: #888; margin-bottom: 5px; font-weight: bold; }
 
         .fila-historial { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #333; font-size: 1.1rem; }
     </style>
@@ -51,7 +44,6 @@
         <div class="tarjeta">
             <div id="txt-vuelta-grande" class="letrero-vuelta">1ª MEDIA VUELTA</div>
             
-            <label style="color: #888; font-size: 0.8rem; display: block; margin-bottom: 5px;">ELIGE EL DESTINO:</label>
             <select id="sel-destino" class="selector-destino">
                 <option value="INDIOS VERDES">INDIOS VERDES</option>
                 <option value="NUEVOS PASEOS">NUEVOS PASEOS</option>
@@ -59,105 +51,116 @@
             </select>
             
             <div class="monto-actual">$<span id="suma-pantalla">0</span></div>
+            <div id="log-libre" style="font-size: 0.8rem; color: #0288d1;"></div>
         </div>
 
         <div class="tarjeta">
             <div class="grid">
-                <div class="campo"><label>$14</label><input type="number" id="v14" oninput="sumar()" placeholder="0" inputmode="numeric"></div>
-                <div class="campo"><label>$55</label><input type="number" id="v55" oninput="sumar()" placeholder="0" inputmode="numeric"></div>
-                <div class="campo"><label>$47</label><input type="number" id="v47" oninput="sumar()" placeholder="0" inputmode="numeric"></div>
-                <div class="campo"><label>$37</label><input type="number" id="v37" oninput="sumar()" placeholder="0" inputmode="numeric"></div>
+                <div class="campo"><label>$14</label><input type="number" id="v14" oninput="sumar()"></div>
+                <div class="campo"><label>$55</label><input type="number" id="v55" oninput="sumar()"></div>
+                <div class="campo"><label>$47</label><input type="number" id="v47" oninput="sumar()"></div>
+                <div class="campo"><label>$37</label><input type="number" id="v37" oninput="sumar()"></div>
+            </div>
+
+            <div style="margin-top:15px; border-top: 1px solid #444; padding-top:15px;">
+                <label style="color: #888; margin-bottom: 10px; display: block;">COBRO LIBRE / EXTRA:</label>
+                <div class="grid">
+                    <input type="number" id="precio-l" placeholder="$ Precio" inputmode="numeric">
+                    <input type="number" id="cant-l" placeholder="Cant." inputmode="numeric">
+                </div>
+                <button class="btn btn-azul" onclick="agregarManual()">+ AGREGAR EXTRA</button>
             </div>
         </div>
 
-        <button class="btn btn-naranja" onclick="guardarYProxima()">FINALIZAR VUELTA</button>
-        <button class="btn btn-gris" onclick="verPantalla('pantalla-resumen')">LIBRO DE RUTA</button>
+        <button class="btn btn-naranja" onclick="guardarTodo()">FINALIZAR VUELTA</button>
+        <button class="btn btn-gris" onclick="verP('pantalla-resumen')">LIBRO DE RUTA</button>
     </div>
 
     <div id="pantalla-resumen" class="pantalla">
         <div class="tarjeta">
             <h2>RESUMEN DEL DÍA</h2>
-            <div id="total-dia-dinero" style="font-size: 2.5rem; color: var(--p); font-weight: bold;">$0</div>
+            <div id="total-dia" style="font-size: 2.5rem; color: var(--p); font-weight: bold;">$0</div>
         </div>
-        
-        <div id="contenedor-vueltas" class="tarjeta" style="padding:0; text-align:left;"></div>
-        
-        <button class="btn btn-naranja" onclick="verPantalla('pantalla-cobro')">VOLVER A COBRAR</button>
-        <button class="btn btn-rojo" onclick="borrarDatos()">EMPEZAR DÍA NUEVO</button>
+        <div id="lista-v" class="tarjeta" style="padding:0; text-align:left;"></div>
+        <button class="btn btn-naranja" onclick="verP('pantalla-cobro')">VOLVER</button>
+        <button class="btn btn-rojo" onclick="borrarTodo()">REINICIAR DÍA</button>
     </div>
 
     <script>
-        let numeroVuelta = parseInt(localStorage.getItem('bus_num_v')) || 1;
-        let historialVueltas = JSON.parse(localStorage.getItem('bus_historial_v')) || [];
+        let nVuelta = parseInt(localStorage.getItem('bus_v_n')) || 1;
+        let historial = JSON.parse(localStorage.getItem('bus_v_h')) || [];
+        let montoLibreAcumulado = 0;
 
         function iniciar() {
-            actualizarTextos();
+            actualizarUI();
         }
 
         function sumar() {
-            let total = (document.getElementById('v14').value || 0) * 14 +
-                        (document.getElementById('v55').value || 0) * 55 +
-                        (document.getElementById('v47').value || 0) * 47 +
-                        (document.getElementById('v37').value || 0) * 37;
+            let f14 = (document.getElementById('v14').value || 0) * 14;
+            let f55 = (document.getElementById('v55').value || 0) * 55;
+            let f47 = (document.getElementById('v47').value || 0) * 47;
+            let f37 = (document.getElementById('v37').value || 0) * 37;
+            
+            let total = f14 + f55 + f47 + f37 + montoLibreAcumulado;
             document.getElementById('suma-pantalla').innerText = total;
         }
 
-        function guardarYProxima() {
-            let monto = parseInt(document.getElementById('suma-pantalla').innerText);
+        function agregarManual() {
+            let p = parseFloat(document.getElementById('precio-l').value) || 0;
+            let c = parseInt(document.getElementById('cant-l').value) || 0;
             
-            // Obtenemos el destino que el chofer eligió en el menú
-            let destinoElegido = document.getElementById('sel-destino').value;
-            
-            if (monto === 0) {
-                if (!confirm("¿Guardar vuelta con $0?")) return;
+            if (p > 0 && c > 0) {
+                montoLibreAcumulado += (p * c);
+                document.getElementById('log-libre').innerText = "Extras: +$" + montoLibreAcumulado;
+                document.getElementById('precio-l').value = "";
+                document.getElementById('cant-l').value = "";
+                sumar();
             }
-
-            historialVueltas.push({
-                vuelta: numeroVuelta,
-                ruta: destinoElegido,
-                dinero: monto
-            });
-
-            localStorage.setItem('bus_historial_v', JSON.stringify(historialVueltas));
-            
-            numeroVuelta++;
-            localStorage.setItem('bus_num_v', numeroVuelta);
-            
-            // Limpiamos los inputs
-            document.getElementById('v14').value = ""; document.getElementById('v55').value = "";
-            document.getElementById('v47').value = ""; document.getElementById('v37').value = "";
-            
-            verPantalla('pantalla-resumen');
         }
 
-        function actualizarTextos() {
-            document.getElementById('txt-vuelta-grande').innerText = numeroVuelta + "ª MEDIA VUELTA";
+        function guardarTodo() {
+            let totalActual = parseInt(document.getElementById('suma-pantalla').innerText);
+            let destino = document.getElementById('sel-destino').value;
+
+            if (totalActual === 0 && !confirm("¿Guardar con $0?")) return;
+
+            historial.push({ n: nVuelta, d: destino, m: totalActual });
+            localStorage.setItem('bus_v_h', JSON.stringify(historial));
             
-            let listaHtml = "";
-            let sumaTotalDia = 0;
+            nVuelta++;
+            localStorage.setItem('bus_v_n', nVuelta);
             
-            historialVueltas.forEach(v => {
-                listaHtml += `<div class="fila-historial">
-                                <span><b>${v.vuelta}ª</b> ${v.ruta}</span>
-                                <span>$${v.dinero}</span>
-                              </div>`;
-                sumaTotalDia += v.dinero;
+            // Limpiar
+            document.querySelectorAll('input').forEach(i => i.value = "");
+            montoLibreAcumulado = 0;
+            document.getElementById('log-libre').innerText = "";
+            
+            verP('pantalla-resumen');
+        }
+
+        function actualizarUI() {
+            document.getElementById('txt-vuelta-grande').innerText = nVuelta + "ª MEDIA VUELTA";
+            
+            let html = ""; let sumaD = 0;
+            historial.forEach(v => {
+                html += <div class="fila-historial"><span><b>${v.n}ª</b> ${v.d}</span><span>$${v.m}</span></div>;
+                sumaD += v.m;
             });
 
-            document.getElementById('contenedor-vueltas').innerHTML = listaHtml || "<p style='padding:20px; color:#555;'>No hay vueltas registradas</p>";
-            document.getElementById('total-dia-dinero').innerText = "$" + sumaTotalDia;
+            document.getElementById('lista-v').innerHTML = html || "<p style='padding:15px;'>Sin registros</p>";
+            document.getElementById('total-dia').innerText = "$" + sumaD;
             sumar();
         }
 
-        function verPantalla(id) {
+        function verP(id) {
             document.getElementById('pantalla-cobro').classList.remove('activa');
             document.getElementById('pantalla-resumen').classList.remove('activa');
             document.getElementById(id).classList.add('activa');
-            actualizarTextos();
+            actualizarUI();
         }
 
-        function borrarDatos() {
-            if (confirm("¿Seguro que quieres borrar todo el historial?")) {
+        function borrarTodo() {
+            if (confirm("¿Borrar todo el día?")) {
                 localStorage.clear();
                 location.reload();
             }
@@ -165,5 +168,6 @@
     </script>
 </body>
 </html>
+
 
 
