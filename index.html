@@ -3,35 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BusCount MX - Profesional</title>
+    <title>BusCount MX - Oficial</title>
     <link rel="manifest" href="manifest.json">
     <style>
         :root { --primary: #4CAF50; --bg: #121212; --card: #1e1e1e; --text: #ffffff; }
-        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; text-align: center; }
+        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; text-align: center; overflow-x: hidden; }
         
         /* Control de pantallas */
         .screen { display: none; }
         .active { display: block !important; }
         
-        .card { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        h2 { margin: 0; color: var(--primary); font-size: 1.1rem; }
-        .dest { font-size: 1.4rem; font-weight: bold; margin: 5px 0; }
+        .card { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border: 1px solid #333; }
+        h2 { margin: 0; color: var(--primary); font-size: 1.1rem; text-transform: uppercase; }
+        .dest { font-size: 1.4rem; font-weight: bold; margin: 5px 0; color: #fff; }
         
         /* Grid de Boletos */
         .grid-boletos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .boleto-box { background: #2a2a2a; padding: 10px; border-radius: 10px; border: 1px solid #444; }
-        input { background: #121212; border: 1px solid #555; color: white; padding: 10px; border-radius: 5px; width: 80%; font-size: 1.2rem; text-align: center; }
+        .boleto-box label { display: block; font-size: 0.9rem; color: #4CAF50; font-weight: bold; margin-bottom: 5px; }
+        input { background: #121212; border: 1px solid #555; color: white; padding: 12px; border-radius: 8px; width: 80%; font-size: 1.3rem; text-align: center; }
 
         /* Venta Libre */
         .venta-libre { border-top: 1px solid #444; margin-top: 15px; padding-top: 15px; }
-        .libre-inputs { display: flex; gap: 5px; margin-top: 10px; }
-        
-        /* Botones */
-        .btn-add { background: #2196F3; color: white; border: none; padding: 10px; border-radius: 5px; font-weight: bold; width: 100%; margin-top: 10px; cursor: pointer; }
-        .btn-main { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; font-size: 1.1rem; width: 100%; margin-top: 10px; cursor: pointer; }
-        .btn-sec { background: #444; color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; margin-top: 10px; cursor: pointer; }
+        .btn-add { background: #2196F3; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; width: 100%; margin-top: 10px; cursor: pointer; }
 
-        .libro-row { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #333; font-size: 0.9rem; text-align: left; }
+        /* Botones Principales */
+        .btn-main { background: var(--primary); color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; width: 100%; margin-top: 15px; cursor: pointer; box-shadow: 0 4px 0 #2e7d32; }
+        .btn-main:active { transform: translateY(3px); box-shadow: none; }
+        .btn-sec { background: #444; color: white; border: none; padding: 15px; border-radius: 12px; width: 100%; margin-top: 10px; cursor: pointer; }
+
+        .libro-row { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #333; font-size: 0.9rem; text-align: left; background: #252525; margin-bottom: 5px; border-radius: 8px; }
     </style>
 </head>
 <body>
@@ -40,192 +41,192 @@
         <div class="card">
             <h2 id="txt-num-vuelta">1ª MEDIA VUELTA</h2>
             <div class="dest" id="txt-destino">INDIOS VERDES</div>
-            <div style="font-size: 2.2rem; color: var(--primary); font-weight: bold;">$<span id="total-maestro">0</span></div>
-            <div style="color: #888; font-size: 0.9rem;"><span id="total-pax">0</span> Pasajeros</div>
+            <div style="font-size: 2.5rem; color: var(--primary); font-weight: bold;">$<span id="total-maestro">0</span></div>
+            <div style="color: #aaa; font-size: 1rem;"><span id="total-pax">0</span> Pasajeros Totales</div>
         </div>
 
         <div class="card">
             <h2>BOLETOS FIJOS</h2>
             <div class="grid-boletos">
-                <div class="boleto-box"><label style="display:block; font-size:0.7rem;">$14</label><input type="number" id="fijo-14" oninput="calcularTotal()" inputmode="numeric"></div>
-                <div class="boleto-box"><label style="display:block; font-size:0.7rem;">$55</label><input type="number" id="fijo-55" oninput="calcularTotal()" inputmode="numeric"></div>
-                <div class="boleto-box"><label style="display:block; font-size:0.7rem;">$47</label><input type="number" id="fijo-47" oninput="calcularTotal()" inputmode="numeric"></div>
-                <div class="boleto-box"><label style="display:block; font-size:0.7rem;">$37</label><input type="number" id="fijo-37" oninput="calcularTotal()" inputmode="numeric"></div>
+                <div class="boleto-box"><label>$14</label><input type="number" id="fijo-14" oninput="calcularTodo()" placeholder="0" inputmode="numeric"></div>
+                <div class="boleto-box"><label>$55</label><input type="number" id="fijo-55" oninput="calcularTodo()" placeholder="0" inputmode="numeric"></div>
+                <div class="boleto-box"><label>$47</label><input type="number" id="fijo-47" oninput="calcularTodo()" placeholder="0" inputmode="numeric"></div>
+                <div class="boleto-box"><label>$37</label><input type="number" id="fijo-37" oninput="calcularTodo()" placeholder="0" inputmode="numeric"></div>
             </div>
 
             <div class="venta-libre">
                 <h2>VENTA LIBRE (EXTRA)</h2>
-                <div class="libre-inputs">
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
                     <input type="number" id="libre-precio" placeholder="$ Precio" inputmode="numeric">
                     <input type="number" id="libre-cant" placeholder="Cant." inputmode="numeric">
                 </div>
                 <button class="btn-add" onclick="agregarLibre()">+ AGREGAR A LA VUELTA</button>
-                <div id="lista-libre" style="font-size: 0.8rem; color: #888; margin-top: 10px;"></div>
+                <div id="lista-libre" style="font-size: 0.85rem; color: #2196F3; margin-top: 10px; font-style: italic;"></div>
             </div>
         </div>
 
-        <button class="btn-main" onclick="finalizarVuelta()">FINALIZAR MEDIA VUELTA</button>
-        <button class="btn-sec" onclick="irALibro()">VER LIBRO DE RUTA</button>
+        <button class="btn-main" onclick="finalizarVuelta()">FINALIZAR Y GUARDAR VUELTA</button>
+        <button class="btn-sec" onclick="irALibro()">ABRIR LIBRO DE RUTA</button>
     </div>
 
     <div id="screen-libro" class="screen">
         <div class="card">
-            <h2>RESUMEN DEL DÍA</h2>
+            <h2>REPORTE DEL DÍA</h2>
             <div class="dest" id="resumen-final">0 Pax | $0 MXN</div>
         </div>
-        <div id="lista-vueltas" class="card" style="padding: 0;">
+        <div id="lista-vueltas">
             </div>
-        <button class="btn-main" onclick="irARegistro()">VOLVER A REGISTRAR</button>
+        <button class="btn-main" onclick="irARegistro()">VOLVER A COBRAR</button>
         <button class="btn-sec" onclick="enviarWhatsApp()">ENVIAR REPORTE AL JEFE</button>
-        <button class="btn-sec" style="background: #f44336;" onclick="resetTodo()">REINICIAR TODO EL DÍA</button>
+        <button class="btn-sec" style="background: #b71c1c;" onclick="resetTodo()">BORRAR TODO EL DÍA</button>
     </div>
 
     <script>
-        // VARIABLES GLOBALES
+        // --- VARIABLES DE MEMORIA ---
         let vueltaActual = parseInt(localStorage.getItem('v_actual')) || 1;
         let historial = JSON.parse(localStorage.getItem('bus_historial')) || [];
-        let subtotalLibre = 0;
-        let paxLibre = 0;
-        let detallesLibre = "";
+        let acumuladoLibreDinero = 0;
+        let acumuladoLibrePax = 0;
+        let textoLibre = "";
 
-        // 1. CALCULAR TOTAL EN PANTALLA
-        function calcularTotal() {
-            const v14 = (parseInt(document.getElementById('fijo-14').value) || 0) * 14;
-            const v55 = (parseInt(document.getElementById('fijo-55').value) || 0) * 55;
-            const v47 = (parseInt(document.getElementById('fijo-47').value) || 0) * 47;
-            const v37 = (parseInt(document.getElementById('fijo-37').value) || 0) * 37;
-            
-            const paxFijos = (parseInt(document.getElementById('fijo-14').value) || 0) + 
-                             (parseInt(document.getElementById('fijo-55').value) || 0) + 
-                             (parseInt(document.getElementById('fijo-47').value) || 0) + 
-                             (parseInt(document.getElementById('fijo-37').value) || 0);
+        // --- 1. CÁLCULO EN TIEMPO REAL ---
+        function calcularTodo() {
+            try {
+                const n14 = parseInt(document.getElementById('fijo-14').value) || 0;
+                const n55 = parseInt(document.getElementById('fijo-55').value) || 0;
+                const n47 = parseInt(document.getElementById('fijo-47').value) || 0;
+                const n37 = parseInt(document.getElementById('fijo-37').value) || 0;
 
-            document.getElementById('total-maestro').innerText = (v14 + v55 + v47 + v37 + subtotalLibre).toLocaleString();
-            document.getElementById('total-pax').innerText = paxFijos + paxLibre;
+                const dineroFijo = (n14 * 14) + (n55 * 55) + (n47 * 47) + (n37 * 37);
+                const paxFijo = n14 + n55 + n47 + n37;
+
+                const totalDinero = dineroFijo + acumuladoLibreDinero;
+                const totalPax = paxFijo + acumuladoLibrePax;
+
+                document.getElementById('total-maestro').innerText = totalDinero.toLocaleString();
+                document.getElementById('total-pax').innerText = totalPax;
+            } catch (e) {
+                console.error("Error en cálculo", e);
+            }
         }
 
-        // 2. AGREGAR VENTA LIBRE
+        // --- 2. AGREGAR VENTA LIBRE ---
         function agregarLibre() {
-            const p = parseFloat(document.getElementById('libre-precio').value);
-            const c = parseInt(document.getElementById('libre-cant').value);
-            
-            if(!p || !c) {
-                alert("Por favor pon precio y cantidad");
+            const p = parseFloat(document.getElementById('libre-precio').value) || 0;
+            const c = parseInt(document.getElementById('libre-cant').value) || 0;
+
+            if (p > 0 && c > 0) {
+                acumuladoLibreDinero += (p * c);
+                acumuladoLibrePax += c;
+                textoLibre += `${c} de $${p} / `;
+                
+                document.getElementById('lista-libre').innerText = "Extras: " + textoLibre;
+                document.getElementById('libre-precio').value = "";
+                document.getElementById('libre-cant').value = "";
+                calcularTodo();
+            } else {
+                alert("Pon un precio y cantidad válidos");
+            }
+        }
+
+        // --- 3. GUARDAR VUELTA ---
+        function finalizarVuelta() {
+            if (vueltaActual > 6) {
+                alert("Turno completado");
                 return;
             }
 
-            subtotalLibre += (p * c);
-            paxLibre += c;
-            detallesLibre += `${c} de $${p}, `;
-            
-            document.getElementById('lista-libre').innerText = "Extras anotados: " + detallesLibre;
-            document.getElementById('libre-precio').value = "";
-            document.getElementById('libre-cant').value = "";
-            calcularTotal();
-        }
+            const n14 = parseInt(document.getElementById('fijo-14').value) || 0;
+            const n55 = parseInt(document.getElementById('fijo-55').value) || 0;
+            const n47 = parseInt(document.getElementById('fijo-47').value) || 0;
+            const n37 = parseInt(document.getElementById('fijo-37').value) || 0;
 
-        // 3. FINALIZAR VUELTA
-        function finalizarVuelta() {
-            const v14 = parseInt(document.getElementById('fijo-14').value) || 0;
-            const v55 = parseInt(document.getElementById('fijo-55').value) || 0;
-            const v47 = parseInt(document.getElementById('fijo-47').value) || 0;
-            const v37 = parseInt(document.getElementById('fijo-37').value) || 0;
-            
-            const totalPax = v14 + v55 + v47 + v37 + paxLibre;
-            const totalDinero = (v14*14)+(v55*55)+(v47*47)+(v37*37) + subtotalLibre;
+            const tPax = n14 + n55 + n47 + n37 + acumuladoLibrePax;
+            const tDinero = (n14*14)+(n55*55)+(n47*47)+(n37*37) + acumuladoLibreDinero;
 
-            if(totalPax === 0) {
-                if(!confirm("No has anotado nada. ¿Guardar vuelta en cero?")) return;
+            if (tPax === 0) {
+                if (!confirm("¿Guardar vuelta sin pasajeros?")) return;
             }
 
-            // Guardar en historial
+            // Guardar
             historial.push({
                 num: vueltaActual,
-                dest: vueltaActual % 2 !== 0 ? "INDIOS VERDES" : "SANTA FE",
-                pax: totalPax,
-                dinero: totalDinero
+                destino: vueltaActual % 2 !== 0 ? "INDIOS VERDES" : "SANTA FE",
+                pax: tPax,
+                dinero: tDinero
             });
 
             localStorage.setItem('bus_historial', JSON.stringify(historial));
-            
             vueltaActual++;
             localStorage.setItem('v_actual', vueltaActual);
-            
-            // Limpiar interfaz
+
+            // Limpiar campos
             document.getElementById('fijo-14').value = "";
             document.getElementById('fijo-55').value = "";
             document.getElementById('fijo-47').value = "";
             document.getElementById('fijo-37').value = "";
-            subtotalLibre = 0; paxLibre = 0; detallesLibre = "";
+            acumuladoLibreDinero = 0; acumuladoLibrePax = 0; textoLibre = "";
             document.getElementById('lista-libre').innerText = "";
-            
+
             irALibro();
         }
 
-        // 4. ACTUALIZAR TODA LA INTERFAZ
-        function actualizarUI() {
-            // Textos de vuelta actual
-            document.getElementById('txt-num-vuelta').innerText = (vueltaActual > 6) ? "TURNO TERMINADO" : ${vueltaActual}ª MEDIA VUELTA;
-            document.getElementById('txt-destino').innerText = (vueltaActual > 6) ? "Buen descanso" : (vueltaActual % 2 !== 0 ? "INDIOS VERDES" : "SANTA FE");
-            
-            // Tabla del Libro de Ruta
+        // --- 4. ACTUALIZAR PANTALLAS ---
+        function actualizarInterfaz() {
+            // Textos de arriba
+            const esTerminado = (vueltaActual > 6);
+            document.getElementById('txt-num-vuelta').innerText = esTerminado ? "TURNO FINALIZADO" : ${vueltaActual}ª MEDIA VUELTA;
+            document.getElementById('txt-destino').innerText = esTerminado ? "Buen descanso" : (vueltaActual % 2 !== 0 ? "INDIOS VERDES" : "SANTA FE");
+
+            // Tabla del Libro
             let html = "";
-            let tP = 0;
-            let tD = 0;
-            
+            let sumaP = 0;
+            let sumaD = 0;
             historial.forEach(v => {
                 html += `
                 <div class="libro-row">
-                    <span><b>${v.num}ª</b> ${v.dest}</span>
+                    <span><b>${v.num}ª</b> ${v.destino}</span>
                     <span>${v.pax} pax | <b>$${v.dinero.toLocaleString()}</b></span>
                 </div>`;
-                tP += v.pax;
-                tD += v.dinero;
+                sumaP += v.pax;
+                sumaD += v.dinero;
             });
-            
-            document.getElementById('lista-vueltas').innerHTML = html || '<p style="padding:20px; color:#666;">No hay datos</p>';
-            document.getElementById('resumen-final').innerText = ${tP} Pax | $${tD.toLocaleString()} MXN;
-            
-            calcularTotal();
+
+            document.getElementById('lista-vueltas').innerHTML = html || '<p style="padding:20px; color:#666;">No hay vueltas registradas</p>';
+            document.getElementById('resumen-final').innerText = ${sumaP} Pax | $${sumaD.toLocaleString()} MXN;
+            calcularTodo();
         }
 
-        // 5. NAVEGACIÓN
+        // --- 5. NAVEGACIÓN ---
         function irALibro() {
             document.getElementById('screen-registro').classList.remove('active');
             document.getElementById('screen-libro').classList.add('active');
-            actualizarUI();
+            actualizarInterfaz();
         }
 
         function irARegistro() {
-            if(vueltaActual > 6) {
-                alert("Ya terminaste las vueltas de hoy.");
-                return;
-            }
+            if (vueltaActual > 6) return alert("El turno ya terminó.");
             document.getElementById('screen-libro').classList.remove('active');
             document.getElementById('screen-registro').classList.add('active');
-            actualizarUI();
+            actualizarInterfaz();
         }
 
-        // 6. WHATSAPP
         function enviarWhatsApp() {
-            let m = *REPORTE DE RUTA - BUSCOUNT*%0A;
-            historial.forEach(v => {
-                m += ${v.num}ª ${v.dest}: ${v.pax} pax - $${v.dinero.toLocaleString()}%0A;
-            });
+            let m = *REPORTE DE RUTA*%0A;
+            historial.forEach(v => m += ${v.num}ª ${v.destino}: ${v.pax} pax - $${v.dinero}%0A);
             m += *TOTAL:* ${document.getElementById('resumen-final').innerText};
             window.open(https://wa.me/?text=${m}, '_blank');
         }
 
-        // 7. RESET
         function resetTodo() {
-            if(confirm("¿Seguro que quieres borrar todo el día y empezar de cero?")) {
+            if (confirm("¿Seguro que quieres borrar todo y empezar de cero?")) {
                 localStorage.clear();
                 location.reload();
             }
         }
 
-        // Al iniciar
-        window.onload = actualizarUI;
+        // Ejecutar al cargar
+        window.onload = actualizarInterfaz;
     </script>
 </body>
 </html>
