@@ -169,6 +169,134 @@
             }
             actualizarUI();
         };
-    </script>
+    <script>
+    let vueltaActual = parseInt(localStorage.getItem('v_actual')) || 1;
+    let historial = JSON.parse(localStorage.getItem('bus_historial')) || [];
+
+    // Función para calcular totales en tiempo real
+    function save() {
+        const vals = [
+            parseInt(document.getElementById('in-1').value) || 0,
+            parseInt(document.getElementById('in-2').value) || 0,
+            parseInt(document.getElementById('in-3').value) || 0,
+            parseInt(document.getElementById('in-4').value) || 0
+        ];
+        const total = vals.reduce((a, b) => a + b, 0);
+        document.getElementById('total-maestro').innerText = total;
+        
+        // Guardar progreso para que no se borre si se cierra la app
+        localStorage.setItem('temp_vuelta', JSON.stringify(vals));
+    }
+
+    function finalizarVuelta() {
+        if (vueltaActual > 6) {
+            alert("Ya completaste las 6 vueltas del día.");
+            return;
+        }
+
+        // LEER DIRECTAMENTE DE LOS INPUTS (Más seguro)
+        const v1 = parseInt(document.getElementById('in-1').value) || 0;
+        const v2 = parseInt(document.getElementById('in-2').value) || 0;
+        const v3 = parseInt(document.getElementById('in-3').value) || 0;
+        const v4 = parseInt(document.getElementById('in-4').value) || 0;
+        
+        const totalPax = v1 + v2 + v3 + v4;
+        const dinero = (v1 * 14) + (v2 * 55) + (v3 * 47) + (v4 * 37);
+
+        // Si todo está en cero, preguntar si de verdad quiere guardar
+        if (totalPax === 0) {
+            if (!confirm("¿Guardar vuelta con 0 pasajeros?")) return;
+        }
+
+        // Guardar en el historial
+        const nuevaVuelta = {
+            num: vueltaActual,
+            destino: vueltaActual % 2 !== 0 ? "INDIOS VERDES" : "SANTA FE",
+            pax: totalPax,
+            dinero: dinero
+        };
+
+        historial.push(nuevaVuelta);
+        localStorage.setItem('bus_historial', JSON.stringify(historial));
+
+        // Avanzar a la siguiente vuelta
+        vueltaActual++;
+        localStorage.setItem('v_actual', vueltaActual);
+        
+        // Limpiar la pantalla para la siguiente
+        document.getElementById('in-1').value = "";
+        document.getElementById('in-2').value = "";
+        document.getElementById('in-3').value = "";
+        document.getElementById('in-4').value = "";
+        localStorage.removeItem('temp_vuelta');
+        
+        actualizarUI();
+        irALibro(); // Mandar al usuario a ver su resumen
+    }
+
+    function actualizarUI() {
+        // Actualizar letreros
+        document.getElementById('txt-num-vuelta').innerText = ${vueltaActual}ª MEDIA VUELTA;
+        document.getElementById('txt-destino').innerText = vueltaActual % 2 !== 0 ? "INDIOS VERDES" : "SANTA FE";
+        document.getElementById('total-maestro').innerText = "0";
+
+        // Dibujar la tabla del Libro de Ruta
+        let html = "";
+        let totalDiaPax = 0;
+        let totalDiaDinero = 0;
+
+        historial.forEach(v => {
+            html += `
+                <div class="libro-row">
+                    <span><b>${v.num}ª</b> ${v.destino}</span>
+                    <span>${v.pax} pax | $${v.dinero.toLocaleString()}</span>
+                </div>`;
+            totalDiaPax += v.pax;
+            totalDiaDinero += v.dinero;
+        });
+
+        document.getElementById('lista-vueltas').innerHTML = html;
+        document.getElementById('resumen-final').innerText = ${totalDiaPax} Pasajeros | $${totalDiaDinero.toLocaleString()} MXN;
+        
+        // Si ya llegó a la 7ma vuelta, avisar que terminó el turno
+        if (vueltaActual > 6) {
+            document.getElementById('txt-num-vuelta').innerText = "TURNO FINALIZADO";
+            document.getElementById('txt-destino').innerText = "Buen descanso";
+        }
+    }
+
+    function irALibro() {
+        document.getElementById('screen-registro').classList.remove('active');
+        document.getElementById('screen-libro').classList.add('active');
+        actualizarUI();
+    }
+
+    function irARegistro() {
+        if (vueltaActual > 6) return alert("El turno ya terminó.");
+        document.getElementById('screen-libro').classList.remove('active');
+        document.getElementById('screen-registro').classList.add('active');
+    }
+
+    function resetTodo() {
+        if (confirm("¿Seguro que quieres borrar todo el día y empezar de cero?")) {
+            localStorage.clear();
+            location.reload();
+        }
+    }
+
+    // Al cargar la página, recuperar lo que se estaba haciendo
+    window.onload = () => {
+        const temp = JSON.parse(localStorage.getItem('temp_vuelta'));
+        if (temp) {
+            document.getElementById('in-1').value = temp[0] || "";
+            document.getElementById('in-2').value = temp[1] || "";
+            document.getElementById('in-3').value = temp[2] || "";
+            document.getElementById('in-4').value = temp[3] || "";
+            save();
+        }
+        actualizarUI();
+    };
+</script>
 </body>
 </html>
+
