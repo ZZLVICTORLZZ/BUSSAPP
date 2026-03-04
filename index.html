@@ -3,34 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BusCount MX - Oficial</title>
+    <title>BusCount MX - Profesional</title>
     <link rel="manifest" href="manifest.json">
     <style>
         :root { --primary: #4CAF50; --bg: #121212; --card: #1e1e1e; --text: #ffffff; }
         body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; text-align: center; }
+        
+        /* Control de pantallas */
         .screen { display: none; }
-        .active { display: block; }
+        .active { display: block !important; }
         
         .card { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         h2 { margin: 0; color: var(--primary); font-size: 1.1rem; }
         .dest { font-size: 1.4rem; font-weight: bold; margin: 5px 0; }
         
-        /* Contenedor de Boletos Fijos */
+        /* Grid de Boletos */
         .grid-boletos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .boleto-box { background: #2a2a2a; padding: 10px; border-radius: 10px; border: 1px solid #444; }
-        .boleto-box label { display: block; font-size: 0.8rem; color: #aaa; margin-bottom: 5px; }
         input { background: #121212; border: 1px solid #555; color: white; padding: 10px; border-radius: 5px; width: 80%; font-size: 1.2rem; text-align: center; }
 
         /* Venta Libre */
         .venta-libre { border-top: 1px solid #444; margin-top: 15px; padding-top: 15px; }
         .libre-inputs { display: flex; gap: 5px; margin-top: 10px; }
-        .btn-add { background: #2196F3; color: white; border: none; padding: 10px; border-radius: 5px; font-weight: bold; width: 100%; margin-top: 10px; }
+        
+        /* Botones */
+        .btn-add { background: #2196F3; color: white; border: none; padding: 10px; border-radius: 5px; font-weight: bold; width: 100%; margin-top: 10px; cursor: pointer; }
+        .btn-main { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; font-size: 1.1rem; width: 100%; margin-top: 10px; cursor: pointer; }
+        .btn-sec { background: #444; color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; margin-top: 10px; cursor: pointer; }
 
-        .btn-main { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; font-size: 1.1rem; width: 100%; margin-top: 10px; }
-        .btn-sec { background: #444; color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; margin-top: 10px; }
-
-        .libro-row { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #333; font-size: 0.9rem; }
-        .badge { background: #333; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; color: #4CAF50; }
+        .libro-row { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #333; font-size: 0.9rem; text-align: left; }
     </style>
 </head>
 <body>
@@ -46,10 +47,10 @@
         <div class="card">
             <h2>BOLETOS FIJOS</h2>
             <div class="grid-boletos">
-                <div class="boleto-box"><label>$14</label><input type="number" id="fijo-14" placeholder="0" oninput="calcularTotal()" inputmode="numeric"></div>
-                <div class="boleto-box"><label>$55</label><input type="number" id="fijo-55" placeholder="0" oninput="calcularTotal()" inputmode="numeric"></div>
-                <div class="boleto-box"><label>$47</label><input type="number" id="fijo-47" placeholder="0" oninput="calcularTotal()" inputmode="numeric"></div>
-                <div class="boleto-box"><label>$37</label><input type="number" id="fijo-37" placeholder="0" oninput="calcularTotal()" inputmode="numeric"></div>
+                <div class="boleto-box"><label style="display:block; font-size:0.7rem;">$14</label><input type="number" id="fijo-14" oninput="calcularTotal()" inputmode="numeric"></div>
+                <div class="boleto-box"><label style="display:block; font-size:0.7rem;">$55</label><input type="number" id="fijo-55" oninput="calcularTotal()" inputmode="numeric"></div>
+                <div class="boleto-box"><label style="display:block; font-size:0.7rem;">$47</label><input type="number" id="fijo-47" oninput="calcularTotal()" inputmode="numeric"></div>
+                <div class="boleto-box"><label style="display:block; font-size:0.7rem;">$37</label><input type="number" id="fijo-37" oninput="calcularTotal()" inputmode="numeric"></div>
             </div>
 
             <div class="venta-libre">
@@ -59,7 +60,7 @@
                     <input type="number" id="libre-cant" placeholder="Cant." inputmode="numeric">
                 </div>
                 <button class="btn-add" onclick="agregarLibre()">+ AGREGAR A LA VUELTA</button>
-                <div id="lista-libre" style="font-size: 0.8rem; color: #888; margin-top: 10px; text-align: left;"></div>
+                <div id="lista-libre" style="font-size: 0.8rem; color: #888; margin-top: 10px;"></div>
             </div>
         </div>
 
@@ -72,19 +73,22 @@
             <h2>RESUMEN DEL DÍA</h2>
             <div class="dest" id="resumen-final">0 Pax | $0 MXN</div>
         </div>
-        <div id="lista-vueltas" class="card" style="padding: 0;"></div>
+        <div id="lista-vueltas" class="card" style="padding: 0;">
+            </div>
         <button class="btn-main" onclick="irARegistro()">VOLVER A REGISTRAR</button>
         <button class="btn-sec" onclick="enviarWhatsApp()">ENVIAR REPORTE AL JEFE</button>
         <button class="btn-sec" style="background: #f44336;" onclick="resetTodo()">REINICIAR TODO EL DÍA</button>
     </div>
 
     <script>
+        // VARIABLES GLOBALES
         let vueltaActual = parseInt(localStorage.getItem('v_actual')) || 1;
         let historial = JSON.parse(localStorage.getItem('bus_historial')) || [];
         let subtotalLibre = 0;
         let paxLibre = 0;
         let detallesLibre = "";
 
+        // 1. CALCULAR TOTAL EN PANTALLA
         function calcularTotal() {
             const v14 = (parseInt(document.getElementById('fijo-14').value) || 0) * 14;
             const v55 = (parseInt(document.getElementById('fijo-55').value) || 0) * 55;
@@ -100,21 +104,27 @@
             document.getElementById('total-pax').innerText = paxFijos + paxLibre;
         }
 
+        // 2. AGREGAR VENTA LIBRE
         function agregarLibre() {
             const p = parseFloat(document.getElementById('libre-precio').value);
             const c = parseInt(document.getElementById('libre-cant').value);
-            if(!p || !c) return alert("Pon precio y cantidad");
+            
+            if(!p || !c) {
+                alert("Por favor pon precio y cantidad");
+                return;
+            }
 
             subtotalLibre += (p * c);
             paxLibre += c;
             detallesLibre += `${c} de $${p}, `;
             
-            document.getElementById('lista-libre').innerText = "Extras: " + detallesLibre;
+            document.getElementById('lista-libre').innerText = "Extras anotados: " + detallesLibre;
             document.getElementById('libre-precio').value = "";
             document.getElementById('libre-cant').value = "";
             calcularTotal();
         }
 
+        // 3. FINALIZAR VUELTA
         function finalizarVuelta() {
             const v14 = parseInt(document.getElementById('fijo-14').value) || 0;
             const v55 = parseInt(document.getElementById('fijo-55').value) || 0;
@@ -124,8 +134,11 @@
             const totalPax = v14 + v55 + v47 + v37 + paxLibre;
             const totalDinero = (v14*14)+(v55*55)+(v47*47)+(v37*37) + subtotalLibre;
 
-            if(totalPax === 0 && !confirm("¿Guardar vuelta en cero?")) return;
+            if(totalPax === 0) {
+                if(!confirm("No has anotado nada. ¿Guardar vuelta en cero?")) return;
+            }
 
+            // Guardar en historial
             historial.push({
                 num: vueltaActual,
                 dest: vueltaActual % 2 !== 0 ? "INDIOS VERDES" : "SANTA FE",
@@ -134,44 +147,87 @@
             });
 
             localStorage.setItem('bus_historial', JSON.stringify(historial));
+            
             vueltaActual++;
             localStorage.setItem('v_actual', vueltaActual);
             
-            // Limpiar todo
-            document.querySelectorAll('input').forEach(i => i.value = "");
+            // Limpiar interfaz
+            document.getElementById('fijo-14').value = "";
+            document.getElementById('fijo-55').value = "";
+            document.getElementById('fijo-47').value = "";
+            document.getElementById('fijo-37').value = "";
             subtotalLibre = 0; paxLibre = 0; detallesLibre = "";
             document.getElementById('lista-libre').innerText = "";
             
             irALibro();
         }
 
+        // 4. ACTUALIZAR TODA LA INTERFAZ
         function actualizarUI() {
-            document.getElementById('txt-num-vuelta').innerText = ${vueltaActual}ª MEDIA VUELTA;
-            document.getElementById('txt-destino').innerText = vueltaActual % 2 !== 0 ? "INDIOS VERDES" : "SANTA FE";
+            // Textos de vuelta actual
+            document.getElementById('txt-num-vuelta').innerText = (vueltaActual > 6) ? "TURNO TERMINADO" : ${vueltaActual}ª MEDIA VUELTA;
+            document.getElementById('txt-destino').innerText = (vueltaActual > 6) ? "Buen descanso" : (vueltaActual % 2 !== 0 ? "INDIOS VERDES" : "SANTA FE");
             
-            let html = ""; let tP = 0; let tD = 0;
+            // Tabla del Libro de Ruta
+            let html = "";
+            let tP = 0;
+            let tD = 0;
+            
             historial.forEach(v => {
-                html += <div class="libro-row"><span><b>${v.num}ª</b> ${v.dest}</span><span>${v.pax} pax | <b>$${v.dinero.toLocaleString()}</b></span></div>;
-                tP += v.pax; tD += v.dinero;
+                html += `
+                <div class="libro-row">
+                    <span><b>${v.num}ª</b> ${v.dest}</span>
+                    <span>${v.pax} pax | <b>$${v.dinero.toLocaleString()}</b></span>
+                </div>`;
+                tP += v.pax;
+                tD += v.dinero;
             });
-            document.getElementById('lista-vueltas').innerHTML = html || '<p style="padding:20px; color:#666;">No hay vueltas registradas</p>';
-            document.getElementById('resumen-final').innerText = ${tP} Pasajeros | $${tD.toLocaleString()} MXN;
+            
+            document.getElementById('lista-vueltas').innerHTML = html || '<p style="padding:20px; color:#666;">No hay datos</p>';
+            document.getElementById('resumen-final').innerText = ${tP} Pax | $${tD.toLocaleString()} MXN;
+            
             calcularTotal();
         }
 
+        // 5. NAVEGACIÓN
+        function irALibro() {
+            document.getElementById('screen-registro').classList.remove('active');
+            document.getElementById('screen-libro').classList.add('active');
+            actualizarUI();
+        }
+
+        function irARegistro() {
+            if(vueltaActual > 6) {
+                alert("Ya terminaste las vueltas de hoy.");
+                return;
+            }
+            document.getElementById('screen-libro').classList.remove('active');
+            document.getElementById('screen-registro').classList.add('active');
+            actualizarUI();
+        }
+
+        // 6. WHATSAPP
         function enviarWhatsApp() {
-            let m = *REPORTE DE RUTA*%0A;
-            historial.forEach(v => m += ${v.num}ª ${v.dest}: ${v.pax} pax - $${v.dinero}%0A);
+            let m = *REPORTE DE RUTA - BUSCOUNT*%0A;
+            historial.forEach(v => {
+                m += ${v.num}ª ${v.dest}: ${v.pax} pax - $${v.dinero.toLocaleString()}%0A;
+            });
             m += *TOTAL:* ${document.getElementById('resumen-final').innerText};
             window.open(https://wa.me/?text=${m}, '_blank');
         }
 
-        function irALibro() { document.getElementById('screen-registro').classList.remove('active'); document.getElementById('screen-libro').classList.add('active'); actualizarUI(); }
-        function irARegistro() { if(vueltaActual > 6) return alert("Turno terminado"); document.getElementById('screen-libro').classList.remove('active'); document.getElementById('screen-registro').classList.add('active'); }
-        function resetTodo() { if(confirm("¿Borrar todo el día?")) { localStorage.clear(); location.reload(); } }
-        
+        // 7. RESET
+        function resetTodo() {
+            if(confirm("¿Seguro que quieres borrar todo el día y empezar de cero?")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        // Al iniciar
         window.onload = actualizarUI;
     </script>
 </body>
 </html>
+
 
