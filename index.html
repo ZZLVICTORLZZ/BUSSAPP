@@ -4,158 +4,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BusCount Pro v2.1</title>
+    <title>BusCount - Destinos</title>
     <style>
-        :root { --p: #ff9800; --bg: #000000; --card: #121212; --text: #e0e0e0; --red: #ff5252; }
-        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; text-align: center; }
-        .screen { display: none; }
-        .active { display: block !important; }
-        .card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 12px; border: 1px solid #333; }
-        h2 { margin: 0; color: var(--p); font-size: 1rem; }
-        .big-num { font-size: 2.8rem; font-weight: bold; color: var(--p); }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .box { background: #1a1a1a; padding: 10px; border-radius: 8px; border: 1px solid #444; }
-        input { background: #000; border: 1px solid var(--p); color: var(--p); padding: 12px; border-radius: 6px; width: 80%; font-size: 1.4rem; text-align: center; }
-        .btn { border: none; padding: 16px; border-radius: 10px; font-weight: bold; font-size: 1.1rem; width: 100%; cursor: pointer; margin-top: 10px; }
-        .btn-main { background: var(--p); color: #000; }
-        .btn-gasto { background: #333; color: var(--red); border: 1px solid var(--red); }
-        .btn-sec { background: #222; color: #aaa; }
-        .libro-row { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #222; font-size: 0.9rem; text-align: left; }
+        :root { --p: #ff9800; --bg: #000; --c: #1a1a1a; --txt: #fff; }
+        body { background: var(--bg); color: var(--txt); font-family: sans-serif; margin: 0; padding: 15px; text-align: center; }
+        
+        .pantalla { display: none; }
+        .activa { display: block !important; }
+        
+        .tarjeta { background: var(--c); padding: 20px; border-radius: 15px; border: 1px solid #333; margin-bottom: 12px; }
+        
+        .letrero-vuelta { font-size: 1.6rem; color: var(--p); font-weight: bold; text-transform: uppercase; margin-bottom: 10px; }
+        
+        /* Estilo para el Selector de Destino */
+        .selector-destino {
+            background: #222;
+            color: var(--p);
+            border: 1px solid var(--p);
+            padding: 12px;
+            width: 100%;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .monto-actual { font-size: 3.5rem; color: var(--p); font-weight: bold; margin: 10px 0; }
+        
+        .btn { border: none; padding: 20px; border-radius: 12px; font-weight: bold; width: 100%; margin-top: 10px; cursor: pointer; font-size: 1.2rem; }
+        .btn-naranja { background: var(--p); color: #000; }
+        .btn-gris { background: #333; color: #fff; }
+        .btn-rojo { background: #b71c1c; color: #fff; }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .campo { background: #222; padding: 10px; border-radius: 10px; border: 1px solid #444; }
+        input { background: #000; color: var(--p); border: 1px solid var(--p); padding: 12px; width: 80%; font-size: 1.8rem; text-align: center; border-radius: 8px; }
+        label { display: block; font-size: 0.9rem; color: #888; margin-bottom: 5px; font-weight: bold; }
+
+        .fila-historial { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #333; font-size: 1.1rem; }
     </style>
 </head>
-<body onload="init()">
+<body onload="iniciar()">
 
-    <div id="scr-reg" class="screen active">
-        <div class="card">
-            <h2 id="v-txt">1ª MEDIA VUELTA</h2>
-            <div id="d-txt" style="font-weight:bold;">INDIOS VERDES</div>
-            <div class="big-num">$<span id="t-m">0</span></div>
-            <div style="font-size:0.9rem; color:#888;">Ingreso Neto: $<span id="t-neto">0</span></div>
-        </div>
-
-        <div class="card">
-            <div class="grid">
-                <div class="box"><label>$14</label><br><input type="number" id="f14" oninput="calc()" placeholder="0"></div>
-                <div class="box"><label>$55</label><br><input type="number" id="f55" oninput="calc()" placeholder="0"></div>
-                <div class="box"><label>$47</label><br><input type="number" id="f47" oninput="calc()" placeholder="0"></div>
-                <div class="box"><label>$37</label><br><input type="number" id="f37" oninput="calc()" placeholder="0"></div>
-            </div>
+    <div id="pantalla-cobro" class="pantalla activa">
+        <div class="tarjeta">
+            <div id="txt-vuelta-grande" class="letrero-vuelta">1ª MEDIA VUELTA</div>
             
-            <div style="margin-top:15px; border-top:1px solid #333; padding-top:10px;">
-                <h2>GASTOS / EXTRAS</h2>
-                <div class="grid">
-                    <input type="number" id="e-pre" placeholder="$ Precio">
-                    <input type="number" id="e-can" placeholder="Cant.">
-                </div>
-                <div style="display:flex; gap:10px;">
-                    <button class="btn btn-main" style="background:#2196F3;" onclick="addEx(1)">+ EXTRA</button>
-                    <button class="btn btn-gasto" onclick="addEx(-1)">- GASTO</button>
-                </div>
-                <div id="list-ex" style="font-size:0.8rem; margin-top:8px; color:var(--p)"></div>
+            <label style="color: #888; font-size: 0.8rem; display: block; margin-bottom: 5px;">ELIGE EL DESTINO:</label>
+            <select id="sel-destino" class="selector-destino">
+                <option value="INDIOS VERDES">INDIOS VERDES</option>
+                <option value="NUEVOS PASEOS">NUEVOS PASEOS</option>
+                <option value="REYES">REYES</option>
+            </select>
+            
+            <div class="monto-actual">$<span id="suma-pantalla">0</span></div>
+        </div>
+
+        <div class="tarjeta">
+            <div class="grid">
+                <div class="campo"><label>$14</label><input type="number" id="v14" oninput="sumar()" placeholder="0" inputmode="numeric"></div>
+                <div class="campo"><label>$55</label><input type="number" id="v55" oninput="sumar()" placeholder="0" inputmode="numeric"></div>
+                <div class="campo"><label>$47</label><input type="number" id="v47" oninput="sumar()" placeholder="0" inputmode="numeric"></div>
+                <div class="campo"><label>$37</label><input type="number" id="v37" oninput="sumar()" placeholder="0" inputmode="numeric"></div>
             </div>
         </div>
 
-        <button class="btn btn-main" onclick="saveV()">FINALIZAR VUELTA</button>
-        <button class="btn btn-sec" onclick="nav('scr-lib')">LIBRO DE RUTA</button>
+        <button class="btn btn-naranja" onclick="guardarYProxima()">FINALIZAR VUELTA</button>
+        <button class="btn btn-gris" onclick="verPantalla('pantalla-resumen')">LIBRO DE RUTA</button>
     </div>
 
-    <div id="scr-lib" class="screen">
-        <div class="card">
+    <div id="pantalla-resumen" class="pantalla">
+        <div class="tarjeta">
             <h2>RESUMEN DEL DÍA</h2>
-            <div class="big-num" style="font-size:1.8rem;">$<span id="res-dinero">0</span></div>
-            <div id="res-pax" style="color:#aaa;">0 Pax Totales</div>
+            <div id="total-dia-dinero" style="font-size: 2.5rem; color: var(--p); font-weight: bold;">$0</div>
         </div>
-        <div id="v-list" class="card" style="padding:0;"></div>
-        <button class="btn btn-main" onclick="nav('scr-reg')">VOLVER</button>
-        <button class="btn btn-sec" onclick="sendWA()">WHATSAPP</button>
-        <button class="btn btn-sec" style="color:var(--red);" onclick="reset()">BORRAR TODO</button>
+        
+        <div id="contenedor-vueltas" class="tarjeta" style="padding:0; text-align:left;"></div>
+        
+        <button class="btn btn-naranja" onclick="verPantalla('pantalla-cobro')">VOLVER A COBRAR</button>
+        <button class="btn btn-rojo" onclick="borrarDatos()">EMPEZAR DÍA NUEVO</button>
     </div>
 
     <script>
-        // ALERT DE PRUEBA: Si no sale este mensaje, el cel está cargando el código viejo.
-        console.log("Sistema cargado");
+        let numeroVuelta = parseInt(localStorage.getItem('bus_num_v')) || 1;
+        let historialVueltas = JSON.parse(localStorage.getItem('bus_historial_v')) || [];
 
-        let vAct = parseInt(localStorage.getItem('v_n')) || 1;
-        let hist = JSON.parse(localStorage.getItem('v_h')) || [];
-        let exD = 0; let exP = 0; let exLog = "";
-
-        function init() { render(); }
-
-        function calc() {
-            let n14 = parseInt(document.getElementById('f14').value) || 0;
-            let n55 = parseInt(document.getElementById('f55').value) || 0;
-            let n47 = parseInt(document.getElementById('f47').value) || 0;
-            let n37 = parseInt(document.getElementById('f37').value) || 0;
-            
-            let f = (n14*14) + (n55*55) + (n47*47) + (n37*37);
-            document.getElementById('t-m').innerText = (f + exD).toLocaleString();
-            document.getElementById('t-neto').innerText = (f + exD).toLocaleString();
+        function iniciar() {
+            actualizarTextos();
         }
 
-        function addEx(mult) {
-            let p = parseFloat(document.getElementById('e-pre').value) || 0;
-            let c = parseInt(document.getElementById('e-can').value) || 0;
-            if(p > 0 && c > 0) {
-                exD += (p * c * mult);
-                if(mult > 0) exP += c;
-                exLog += (mult > 0 ? "+" : "-") + `$${p*c} `;
-                document.getElementById('list-ex').innerText = exLog;
-                document.getElementById('e-pre').value = "";
-                document.getElementById('e-can').value = "";
-                calc();
+        function sumar() {
+            let total = (document.getElementById('v14').value || 0) * 14 +
+                        (document.getElementById('v55').value || 0) * 55 +
+                        (document.getElementById('v47').value || 0) * 47 +
+                        (document.getElementById('v37').value || 0) * 37;
+            document.getElementById('suma-pantalla').innerText = total;
+        }
+
+        function guardarYProxima() {
+            let monto = parseInt(document.getElementById('suma-pantalla').innerText);
+            
+            // Obtenemos el destino que el chofer eligió en el menú
+            let destinoElegido = document.getElementById('sel-destino').value;
+            
+            if (monto === 0) {
+                if (!confirm("¿Guardar vuelta con $0?")) return;
+            }
+
+            historialVueltas.push({
+                vuelta: numeroVuelta,
+                ruta: destinoElegido,
+                dinero: monto
+            });
+
+            localStorage.setItem('bus_historial_v', JSON.stringify(historialVueltas));
+            
+            numeroVuelta++;
+            localStorage.setItem('bus_num_v', numeroVuelta);
+            
+            // Limpiamos los inputs
+            document.getElementById('v14').value = ""; document.getElementById('v55').value = "";
+            document.getElementById('v47').value = ""; document.getElementById('v37').value = "";
+            
+            verPantalla('pantalla-resumen');
+        }
+
+        function actualizarTextos() {
+            document.getElementById('txt-vuelta-grande').innerText = numeroVuelta + "ª MEDIA VUELTA";
+            
+            let listaHtml = "";
+            let sumaTotalDia = 0;
+            
+            historialVueltas.forEach(v => {
+                listaHtml += `<div class="fila-historial">
+                                <span><b>${v.vuelta}ª</b> ${v.ruta}</span>
+                                <span>$${v.dinero}</span>
+                              </div>`;
+                sumaTotalDia += v.dinero;
+            });
+
+            document.getElementById('contenedor-vueltas').innerHTML = listaHtml || "<p style='padding:20px; color:#555;'>No hay vueltas registradas</p>";
+            document.getElementById('total-dia-dinero').innerText = "$" + sumaTotalDia;
+            sumar();
+        }
+
+        function verPantalla(id) {
+            document.getElementById('pantalla-cobro').classList.remove('activa');
+            document.getElementById('pantalla-resumen').classList.remove('activa');
+            document.getElementById(id).classList.add('activa');
+            actualizarTextos();
+        }
+
+        function borrarDatos() {
+            if (confirm("¿Seguro que quieres borrar todo el historial?")) {
+                localStorage.clear();
+                location.reload();
             }
         }
-
-        function saveV() {
-            let n14 = parseInt(document.getElementById('f14').value) || 0;
-            let n55 = parseInt(document.getElementById('f55').value) || 0;
-            let n47 = parseInt(document.getElementById('f47').value) || 0;
-            let n37 = parseInt(document.getElementById('f37').value) || 0;
-            
-            let totalD = (n14*14) + (n55*55) + (n47*47) + (n37*37) + exD;
-            let totalP = n14 + n55 + n47 + n37 + exP;
-
-            hist.push({ n: vAct, d: (vAct%2!==0?"INDIOS VERDES":"SANTA FE"), p: totalP, m: totalD });
-            localStorage.setItem('v_h', JSON.stringify(hist));
-            vAct++; localStorage.setItem('v_n', vAct);
-            
-            // Limpiar inputs
-            document.getElementById('f14').value=""; document.getElementById('f55').value="";
-            document.getElementById('f47').value=""; document.getElementById('f37').value="";
-            exD=0; exP=0; exLog=""; document.getElementById('list-ex').innerText="";
-            nav('scr-lib');
-        }
-
-        function render() {
-            document.getElementById('v-txt').innerText = vAct + "ª MEDIA VUELTA";
-            document.getElementById('d-txt').innerText = (vAct%2!==0?"INDIOS VERDES":"SANTA FE");
-            let h = ""; let sP = 0; let sD = 0;
-            hist.forEach(v => {
-                h += <div class="libro-row"><span><b>${v.n}ª</b> ${v.d}</span><span>${v.p} pax | <b>$${v.m}</b></span></div>;
-                sP += v.p; sD += v.m;
-            });
-            document.getElementById('v-list').innerHTML = h || '<p style="padding:10px;">Sin vueltas</p>';
-            document.getElementById('res-dinero').innerText = sD.toLocaleString();
-            document.getElementById('res-pax').innerText = sP + " Pasajeros Totales";
-            calc();
-        }
-
-        function nav(s) { 
-            document.getElementById('scr-reg').classList.remove('active');
-            document.getElementById('scr-lib').classList.remove('active');
-            document.getElementById(s).classList.add('active'); 
-            render(); 
-        }
-
-        function sendWA() {
-            let m = *REPORTE DE RUTA*%0A;
-            hist.forEach(v => m += ${v.n}ª ${v.d}: ${v.p} pax - $${v.m}%0A);
-            m += *TOTAL NETO:* $${document.getElementById('res-dinero').innerText};
-            window.open(https://wa.me/?text=${m}, '_blank');
-        }
-
-        function reset() { if(confirm("¿Reiniciar día?")) { localStorage.clear(); location.reload(); } }
     </script>
 </body>
 </html>
+
 
