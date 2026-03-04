@@ -4,33 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BusCount Pro v2</title>
+    <title>BusCount Pro v2.1</title>
     <style>
         :root { --p: #ff9800; --bg: #000000; --card: #121212; --text: #e0e0e0; --red: #ff5252; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; text-align: center; }
-        
+        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; text-align: center; }
         .screen { display: none; }
         .active { display: block !important; }
-        
-        /* Diseño tipo Tablero de Bus */
-        .card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 12px; border: 1px solid #333; box-shadow: 0 4px 15px rgba(0,0,0,0.8); }
-        h2 { margin: 0; color: var(--p); font-size: 1rem; letter-spacing: 1px; }
-        .big-num { font-size: 2.8rem; font-weight: bold; color: var(--p); text-shadow: 0 0 10px rgba(255,152,0,0.3); }
-        
-        /* Grid de Entradas */
+        .card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 12px; border: 1px solid #333; }
+        h2 { margin: 0; color: var(--p); font-size: 1rem; }
+        .big-num { font-size: 2.8rem; font-weight: bold; color: var(--p); }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .box { background: #1a1a1a; padding: 10px; border-radius: 8px; border: 1px solid #444; }
-        .box label { display: block; font-size: 0.8rem; color: #888; margin-bottom: 5px; }
-        input { background: #000; border: 1px solid var(--p); color: var(--p); padding: 12px; border-radius: 6px; width: 85%; font-size: 1.4rem; text-align: center; }
-        
-        /* Botones */
-        .btn { border: none; padding: 16px; border-radius: 10px; font-weight: bold; font-size: 1.1rem; width: 100%; cursor: pointer; margin-top: 10px; transition: 0.2s; }
+        input { background: #000; border: 1px solid var(--p); color: var(--p); padding: 12px; border-radius: 6px; width: 80%; font-size: 1.4rem; text-align: center; }
+        .btn { border: none; padding: 16px; border-radius: 10px; font-weight: bold; font-size: 1.1rem; width: 100%; cursor: pointer; margin-top: 10px; }
         .btn-main { background: var(--p); color: #000; }
         .btn-gasto { background: #333; color: var(--red); border: 1px solid var(--red); }
         .btn-sec { background: #222; color: #aaa; }
-        
         .libro-row { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #222; font-size: 0.9rem; text-align: left; }
-        .gasto-tag { color: var(--red); font-weight: bold; }
     </style>
 </head>
 <body onload="init()">
@@ -38,36 +28,35 @@
     <div id="scr-reg" class="screen active">
         <div class="card">
             <h2 id="v-txt">1ª MEDIA VUELTA</h2>
-            <div id="d-txt" style="font-weight:bold; margin-bottom:5px;">INDIOS VERDES</div>
+            <div id="d-txt" style="font-weight:bold;">INDIOS VERDES</div>
             <div class="big-num">$<span id="t-m">0</span></div>
             <div style="font-size:0.9rem; color:#888;">Ingreso Neto: $<span id="t-neto">0</span></div>
         </div>
 
         <div class="card">
-            <h2>BOLETOS</h2>
             <div class="grid">
-                <div class="box"><label>$14</label><input type="number" id="f14" oninput="calc()" inputmode="numeric"></div>
-                <div class="box"><label>$55</label><input type="number" id="f55" oninput="calc()" inputmode="numeric"></div>
-                <div class="box"><label>$47</label><input type="number" id="f47" oninput="calc()" inputmode="numeric"></div>
-                <div class="box"><label>$37</label><input type="number" id="f37" oninput="calc()" inputmode="numeric"></div>
+                <div class="box"><label>$14</label><br><input type="number" id="f14" oninput="calc()" placeholder="0"></div>
+                <div class="box"><label>$55</label><br><input type="number" id="f55" oninput="calc()" placeholder="0"></div>
+                <div class="box"><label>$47</label><br><input type="number" id="f47" oninput="calc()" placeholder="0"></div>
+                <div class="box"><label>$37</label><br><input type="number" id="f37" oninput="calc()" placeholder="0"></div>
             </div>
             
-            <div style="margin-top:15px; border-top: 1px solid #333; padding-top:10px;">
+            <div style="margin-top:15px; border-top:1px solid #333; padding-top:10px;">
                 <h2>GASTOS / EXTRAS</h2>
                 <div class="grid">
-                    <input type="number" id="e-pre" placeholder="$ Precio" inputmode="numeric">
-                    <input type="number" id="e-can" placeholder="Cant." inputmode="numeric">
+                    <input type="number" id="e-pre" placeholder="$ Precio">
+                    <input type="number" id="e-can" placeholder="Cant.">
                 </div>
                 <div style="display:flex; gap:10px;">
-                    <button class="btn btn-main" style="background:#2196F3; font-size:0.9rem;" onclick="addEx(1)">+ PASAJE EXTRA</button>
-                    <button class="btn btn-gasto" style="font-size:0.9rem;" onclick="addEx(-1)">- ANOTAR GASTO</button>
+                    <button class="btn btn-main" style="background:#2196F3;" onclick="addEx(1)">+ EXTRA</button>
+                    <button class="btn btn-gasto" onclick="addEx(-1)">- GASTO</button>
                 </div>
                 <div id="list-ex" style="font-size:0.8rem; margin-top:8px; color:var(--p)"></div>
             </div>
         </div>
 
         <button class="btn btn-main" onclick="saveV()">FINALIZAR VUELTA</button>
-        <button class="btn btn-sec" onclick="nav('scr-lib')">VER LIBRO DE RUTA</button>
+        <button class="btn btn-sec" onclick="nav('scr-lib')">LIBRO DE RUTA</button>
     </div>
 
     <div id="scr-lib" class="screen">
@@ -77,12 +66,15 @@
             <div id="res-pax" style="color:#aaa;">0 Pax Totales</div>
         </div>
         <div id="v-list" class="card" style="padding:0;"></div>
-        <button class="btn btn-main" onclick="nav('scr-reg')">VOLVER A REGISTRAR</button>
-        <button class="btn btn-sec" onclick="sendWA()">ENVIAR REPORTE WHATSAPP</button>
-        <button class="btn btn-sec" style="color:var(--red);" onclick="reset()">BORRAR TODO EL DÍA</button>
+        <button class="btn btn-main" onclick="nav('scr-reg')">VOLVER</button>
+        <button class="btn btn-sec" onclick="sendWA()">WHATSAPP</button>
+        <button class="btn btn-sec" style="color:var(--red);" onclick="reset()">BORRAR TODO</button>
     </div>
 
     <script>
+        // ALERT DE PRUEBA: Si no sale este mensaje, el cel está cargando el código viejo.
+        console.log("Sistema cargado");
+
         let vAct = parseInt(localStorage.getItem('v_n')) || 1;
         let hist = JSON.parse(localStorage.getItem('v_h')) || [];
         let exD = 0; let exP = 0; let exLog = "";
@@ -90,72 +82,80 @@
         function init() { render(); }
 
         function calc() {
-            let f = ( (id('f14').value||0)*14 ) + ( (id('f55').value||0)*55 ) + 
-                    ( (id('f47').value||0)*47 ) + ( (id('f37').value||0)*37 );
-            id('t-m').innerText = (f + exD).toLocaleString();
-            id('t-neto').innerText = (f + exD).toLocaleString();
+            let n14 = parseInt(document.getElementById('f14').value) || 0;
+            let n55 = parseInt(document.getElementById('f55').value) || 0;
+            let n47 = parseInt(document.getElementById('f47').value) || 0;
+            let n37 = parseInt(document.getElementById('f37').value) || 0;
+            
+            let f = (n14*14) + (n55*55) + (n47*47) + (n37*37);
+            document.getElementById('t-m').innerText = (f + exD).toLocaleString();
+            document.getElementById('t-neto').innerText = (f + exD).toLocaleString();
         }
 
         function addEx(mult) {
-            let p = parseFloat(id('e-pre').value) || 0;
-            let c = parseInt(id('e-can').value) || 0;
-            if(p>0 && c>0) {
-                let monto = p * c * mult;
-                exD += monto;
+            let p = parseFloat(document.getElementById('e-pre').value) || 0;
+            let c = parseInt(document.getElementById('e-can').value) || 0;
+            if(p > 0 && c > 0) {
+                exD += (p * c * mult);
                 if(mult > 0) exP += c;
                 exLog += (mult > 0 ? "+" : "-") + `$${p*c} `;
-                id('list-ex').innerText = "Movimientos: " + exLog;
-                id('e-pre').value = ""; id('e-can').value = "";
+                document.getElementById('list-ex').innerText = exLog;
+                document.getElementById('e-pre').value = "";
+                document.getElementById('e-can').value = "";
                 calc();
             }
         }
 
         function saveV() {
-            let f14 = parseInt(id('f14').value)||0; let f55 = parseInt(id('f55').value)||0;
-            let f47 = parseInt(id('f47').value)||0; let f37 = parseInt(id('f37').value)||0;
-            let totalD = (f14*14)+(f55*55)+(f47*47)+(f37*37) + exD;
-            let totalP = f14+f55+f47+f37+exP;
+            let n14 = parseInt(document.getElementById('f14').value) || 0;
+            let n55 = parseInt(document.getElementById('f55').value) || 0;
+            let n47 = parseInt(document.getElementById('f47').value) || 0;
+            let n37 = parseInt(document.getElementById('f37').value) || 0;
+            
+            let totalD = (n14*14) + (n55*55) + (n47*47) + (n37*37) + exD;
+            let totalP = n14 + n55 + n47 + n37 + exP;
 
             hist.push({ n: vAct, d: (vAct%2!==0?"INDIOS VERDES":"SANTA FE"), p: totalP, m: totalD });
             localStorage.setItem('v_h', JSON.stringify(hist));
             vAct++; localStorage.setItem('v_n', vAct);
             
-            // Limpiar
-            document.querySelectorAll('input').forEach(i => i.value="");
-            exD=0; exP=0; exLog=""; id('list-ex').innerText="";
+            // Limpiar inputs
+            document.getElementById('f14').value=""; document.getElementById('f55').value="";
+            document.getElementById('f47').value=""; document.getElementById('f37').value="";
+            exD=0; exP=0; exLog=""; document.getElementById('list-ex').innerText="";
             nav('scr-lib');
         }
 
         function render() {
-            id('v-txt').innerText = vAct + "ª MEDIA VUELTA";
-            id('d-txt').innerText = (vAct%2!==0?"INDIOS VERDES":"SANTA FE");
+            document.getElementById('v-txt').innerText = vAct + "ª MEDIA VUELTA";
+            document.getElementById('d-txt').innerText = (vAct%2!==0?"INDIOS VERDES":"SANTA FE");
             let h = ""; let sP = 0; let sD = 0;
             hist.forEach(v => {
                 h += <div class="libro-row"><span><b>${v.n}ª</b> ${v.d}</span><span>${v.p} pax | <b>$${v.m}</b></span></div>;
                 sP += v.p; sD += v.m;
             });
-            id('v-list').innerHTML = h || '<p style="padding:10px;">Sin vueltas</p>';
-            id('res-dinero').innerText = sD.toLocaleString();
-            id('res-pax').innerText = sP + " Pasajeros Totales";
+            document.getElementById('v-list').innerHTML = h || '<p style="padding:10px;">Sin vueltas</p>';
+            document.getElementById('res-dinero').innerText = sD.toLocaleString();
+            document.getElementById('res-pax').innerText = sP + " Pasajeros Totales";
             calc();
         }
 
         function nav(s) { 
-            document.querySelectorAll('.screen').forEach(x => x.classList.remove('active'));
-            id(s).classList.add('active'); render(); 
+            document.getElementById('scr-reg').classList.remove('active');
+            document.getElementById('scr-lib').classList.remove('active');
+            document.getElementById(s).classList.add('active'); 
+            render(); 
         }
 
         function sendWA() {
             let m = *REPORTE DE RUTA*%0A;
             hist.forEach(v => m += ${v.n}ª ${v.d}: ${v.p} pax - $${v.m}%0A);
-            m += *TOTAL NETO:* $${id('res-dinero').innerText};
+            m += *TOTAL NETO:* $${document.getElementById('res-dinero').innerText};
             window.open(https://wa.me/?text=${m}, '_blank');
         }
 
         function reset() { if(confirm("¿Reiniciar día?")) { localStorage.clear(); location.reload(); } }
-        function id(i) { return document.getElementById(i); }
     </script>
 </body>
 </html>
-
 
