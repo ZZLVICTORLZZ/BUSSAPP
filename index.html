@@ -1,21 +1,22 @@
 
 
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BusCount V5</title>
+    <title>BusCount V5.2 - WhatsApp</title>
     <style>
-        :root { --p: #ff9800; --bg: #000; --c: #1a1a1a; }
+        :root { --p: #00e5ff; --bg: #000; --c: #1a1a1a; --wa: #25d366; }
         body { background: var(--bg); color: #fff; font-family: sans-serif; margin: 0; padding: 10px; text-align: center; }
         .pantalla { display: none; }
         .activa { display: block !important; }
         .tarjeta { background: var(--c); padding: 15px; border-radius: 15px; border: 1px solid #333; margin-bottom: 10px; }
         .btn { border: none; padding: 18px; border-radius: 12px; font-weight: bold; width: 100%; margin-top: 10px; font-size: 1.1rem; cursor: pointer; }
-        .btn-naranja { background: var(--p); color: #000; }
+        .btn-turquesa { background: var(--p); color: #000; }
         .btn-gris { background: #333; color: #fff; }
-        .btn-azul { background: #0288d1; color: #fff; }
+        .btn-wa { background: var(--wa); color: #000; }
         .btn-rojo { background: #b71c1c; color: #fff; }
         input { background: #000; color: var(--p); border: 1px solid var(--p); padding: 10px; width: 80%; font-size: 1.5rem; text-align: center; border-radius: 8px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -24,7 +25,7 @@
 </head>
 <body onload="iniciarApp()">
 
-    <div style="font-size: 0.8rem; color: #444;">VERSIÓN 5.0 - REVISIÓN TOTAL</div>
+    <div style="font-size: 0.8rem; color: #444;">VERSIÓN 5.2 - LISTO PARA WHATSAPP</div>
 
     <div id="p-reg" class="pantalla activa">
         <div class="tarjeta">
@@ -35,15 +36,15 @@
                 <option value="REYES">REYES</option>
             </select>
             <div style="font-size: 3.5rem; font-weight: bold; color: var(--p);">$<span id="t-v">0</span></div>
-            <div id="log-ex" style="font-size: 0.9rem; color: #0288d1;"></div>
+            <div id="log-ex" style="font-size: 0.9rem; color: #00e5ff;"></div>
         </div>
 
         <div class="tarjeta">
             <div class="grid">
-                <div><label>$14</label><br><input type="number" id="i14" oninput="sumar()"></div>
-                <div><label>$55</label><br><input type="number" id="i55" oninput="sumar()"></div>
-                <div><label>$47</label><br><input type="number" id="i47" oninput="sumar()"></div>
-                <div><label>$37</label><br><input type="number" id="i37" oninput="sumar()"></div>
+                <div><label style="color:#888; font-size:0.8rem;">$14</label><br><input type="number" id="i14" oninput="sumar()"></div>
+                <div><label style="color:#888; font-size:0.8rem;">$55</label><br><input type="number" id="i55" oninput="sumar()"></div>
+                <div><label style="color:#888; font-size:0.8rem;">$47</label><br><input type="number" id="i47" oninput="sumar()"></div>
+                <div><label style="color:#888; font-size:0.8rem;">$37</label><br><input type="number" id="i37" oninput="sumar()"></div>
             </div>
             <div style="margin-top:15px; border-top:1px solid #333; padding-top:10px;">
                 <label style="color:#888;">COBRO LIBRE</label>
@@ -51,26 +52,27 @@
                     <input type="number" id="l-p" placeholder="Precio">
                     <input type="number" id="l-c" placeholder="Cant.">
                 </div>
-                <button class="btn btn-azul" onclick="agregarLibre()">+ AGREGAR COBRO LIBRE</button>
+                <button class="btn btn-gris" style="color:var(--p)" onclick="agregarLibre()">+ AGREGAR COBRO LIBRE</button>
             </div>
         </div>
 
-        <button class="btn btn-naranja" onclick="finalizar()">FINALIZAR VUELTA</button>
+        <button class="btn btn-turquesa" onclick="finalizar()">FINALIZAR VUELTA</button>
         <button class="btn btn-gris" onclick="irA('p-lib')">VER LIBRO DE RUTA</button>
     </div>
 
     <div id="p-lib" class="pantalla">
         <div class="tarjeta">
-            <h2>RESUMEN DEL DÍA</h2>
+            <h2 style="color:var(--p);">RESUMEN DEL DÍA</h2>
             <div id="t-dia" style="font-size: 2.5rem; color:var(--p); font-weight:bold;">$0</div>
         </div>
         <div id="lista" class="tarjeta" style="padding:0; text-align:left;"></div>
-        <button class="btn btn-naranja" onclick="irA('p-reg')">VOLVER A COBRAR</button>
+        
+        <button class="btn btn-wa" onclick="enviarWhatsApp()">✅ ENVIAR REPORTE WHATSAPP</button>
+        <button class="btn btn-turquesa" onclick="irA('p-reg')">VOLVER A COBRAR</button>
         <button class="btn btn-rojo" onclick="reset()">BORRAR TODO EL DÍA</button>
     </div>
 
     <script>
-        // MEMORIA
         var numV = parseInt(localStorage.getItem('v_n')) || 1;
         var hist = JSON.parse(localStorage.getItem('v_h')) || [];
         var extra = 0;
@@ -92,7 +94,7 @@
             var c = parseInt(document.getElementById('l-c').value) || 0;
             if (p > 0 && c > 0) {
                 extra += (p * c);
-                document.getElementById('log-ex').innerText = "Extras: +$" + extra;
+                document.getElementById('log-ex').innerText = "Extra: +$" + extra;
                 document.getElementById('l-p').value = "";
                 document.getElementById('l-c').value = "";
                 sumar();
@@ -102,21 +104,14 @@
         function finalizar() {
             var m = parseInt(document.getElementById('t-v').innerText);
             var d = document.getElementById('sel-d').value;
-            
             if (m === 0) { if(!confirm("¿Guardar en $0?")) return; }
-
             hist.push({n: numV, d: d, m: m});
             localStorage.setItem('v_h', JSON.stringify(hist));
-            
             numV++;
             localStorage.setItem('v_n', numV);
-            
-            // Limpiar
             document.getElementById('i14').value=""; document.getElementById('i55').value="";
             document.getElementById('i47').value=""; document.getElementById('i37').value="";
-            extra = 0;
-            document.getElementById('log-ex').innerText = "";
-            
+            extra = 0; document.getElementById('log-ex').innerText = "";
             irA('p-lib');
         }
 
@@ -128,7 +123,7 @@
                      '<span><b>' + v.n + 'ª</b> ' + v.d + '</span><span>$' + v.m + '</span></div>';
                 total += v.m;
             });
-            document.getElementById('lista').innerHTML = h || "<p style='padding:15px;'>Sin datos</p>";
+            document.getElementById('lista').innerHTML = h || "<p style='padding:15px; color:#555;'>Sin datos registrados</p>";
             document.getElementById('t-dia').innerText = "$" + total;
             sumar();
         }
@@ -141,12 +136,29 @@
         }
 
         function reset() {
-            if (confirm("¿Borrar todo?")) {
+            if (confirm("¿Borrar todo el día?")) {
                 localStorage.clear();
                 location.reload();
             }
         }
+
+        // FUNCIÓN DE WHATSAPP
+        function enviarWhatsApp() {
+            if (hist.length === 0) {
+                alert("No hay datos para enviar.");
+                return;
+            }
+            var mensaje = "REPORTE DE RUTA - BUSCOUNT%0A";
+            mensaje += "----------------------------%0A";
+            hist.forEach(function(v) {
+                mensaje += v.n + "ª " + v.d + ": $" + v.m + "%0A";
+            });
+            mensaje += "----------------------------%0A";
+            mensaje += "TOTAL DEL DÍA: " + document.getElementById('t-dia').innerText + "";
+            
+            // Abre WhatsApp con el mensaje listo
+            window.open("https://wa.me/?text=" + mensaje, "_blank");
+        }
     </script>
 </body>
 </html>
-
