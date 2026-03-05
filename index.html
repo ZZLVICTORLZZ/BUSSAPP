@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BusCount V5.3 - Detalle</title>
+    <title>BusCount V5.4 - Desglose Libre</title>
     <style>
         :root { --p: #00e5ff; --bg: #000; --c: #1a1a1a; --wa: #25d366; }
         body { background: var(--bg); color: #fff; font-family: sans-serif; margin: 0; padding: 10px; text-align: center; }
@@ -25,7 +25,7 @@
 </head>
 <body onload="iniciarApp()">
 
-    <div style="font-size: 0.8rem; color: #444;">VERSIÓN 5.3 - REPORTE DETALLADO</div>
+    <div style="font-size: 0.8rem; color: #444;">VERSIÓN 5.4 - DESGLOSE COMPLETO</div>
 
     <div id="p-reg" class="pantalla activa">
         <div class="tarjeta">
@@ -36,7 +36,7 @@
                 <option value="REYES">REYES</option>
             </select>
             <div style="font-size: 3.5rem; font-weight: bold; color: var(--p);">$<span id="t-v">0</span></div>
-            <div id="log-ex" style="font-size: 0.9rem; color: #00e5ff;"></div>
+            <div id="log-ex" style="font-size: 0.8rem; color: #00e5ff; height: 1.2rem;"></div>
         </div>
 
         <div class="tarjeta">
@@ -75,26 +75,28 @@
     <script>
         var numV = parseInt(localStorage.getItem('v_n')) || 1;
         var hist = JSON.parse(localStorage.getItem('v_h')) || [];
-        var extraDinero = 0;
-        var extraPax = 0;
+        var libresActuales = []; // Lista de cobros libres de la vuelta actual
 
         function iniciarApp() { render(); }
 
         function sumar() {
-            var v14 = (document.getElementById('i14').value || 0) * 14;
-            var v55 = (document.getElementById('i55').value || 0) * 55;
-            var v47 = (document.getElementById('i47').value || 0) * 47;
-            var v37 = (document.getElementById('i37').value || 0) * 37;
-            document.getElementById('t-v').innerText = (v14 + v55 + v47 + v37 + extraDinero);
+            var fijos = (document.getElementById('i14').value || 0) * 14 +
+                        (document.getElementById('i55').value || 0) * 55 +
+                        (document.getElementById('i47').value || 0) * 47 +
+                        (document.getElementById('i37').value || 0) * 37;
+            
+            var totalLibres = 0;
+            libresActuales.forEach(function(l) { totalLibres += (l.p * l.c); });
+            
+            document.getElementById('t-v').innerText = (fijos + totalLibres);
         }
 
         function agregarLibre() {
             var p = parseFloat(document.getElementById('l-p').value) || 0;
             var c = parseInt(document.getElementById('l-c').value) || 0;
             if (p > 0 && c > 0) {
-                extraDinero += (p * c);
-                extraPax += c;
-                document.getElementById('log-ex').innerText = "Extra: +$" + extraDinero;
+                libresActuales.push({p: p, c: c});
+                document.getElementById('log-ex').innerText = "Extra agregado: $" + (p*c);
                 document.getElementById('l-p').value = "";
                 document.getElementById('l-c').value = "";
                 sumar();
@@ -105,21 +107,20 @@
             var m = parseInt(document.getElementById('t-v').innerText);
             var d = document.getElementById('sel-d').value;
             
-            // Capturamos cantidades antes de borrar
             var c14 = parseInt(document.getElementById('i14').value) || 0;
             var c55 = parseInt(document.getElementById('i55').value) || 0;
             var c47 = parseInt(document.getElementById('i47').value) || 0;
             var c37 = parseInt(document.getElementById('i37').value) || 0;
 
-            if (m === 0) { if(!confirm("¿Guardar en $0?")) return; }
+            if (m === 0 && !confirm("¿Guardar en $0?")) return;
 
-            // Guardamos todo el detalle
+            // Calculamos total de pasajeros
+            var tPax = c14 + c55 + c47 + c37;
+            libresActuales.forEach(function(l) { tPax += l.c; });
+
             hist.push({
-                n: numV, 
-                d: d, 
-                m: m,
-                pax: (c14 + c55 + c47 + c37 + extraPax),
-                det: { p14: c14, p55: c55, p47: c47, p37: c37, exM: extraDinero, exP: extraPax }
+                n: numV, d: d, m: m, pTot: tPax,
+                det: { p14: c14, p55: c55, p47: c47, p37: c37, libres: [...libresActuales] }
             });
 
             localStorage.setItem('v_h', JSON.stringify(hist));
@@ -129,8 +130,7 @@
             // Limpiar
             document.getElementById('i14').value=""; document.getElementById('i55').value="";
             document.getElementById('i47').value=""; document.getElementById('i37').value="";
-            extraDinero = 0; extraPax = 0;
-            document.getElementById('log-ex').innerText = "";
+            libresActuales = []; document.getElementById('log-ex').innerText = "";
             irA('p-lib');
         }
 
@@ -139,7 +139,7 @@
             var h = ""; var total = 0;
             hist.forEach(function(v) {
                 h += '<div style="display:flex; justify-content:space-between; padding:12px; border-bottom:1px solid #333;">' +
-                     '<span><b>' + v.n + 'ª</b> ' + v.d + '</span><span>' + v.pax + ' pax | <b>$' + v.m + '</b></span></div>';
+                     '<span><b>' + v.n + 'ª</b> ' + v.d + '</span><span>' + v.pTot + ' pax | <b>$' + v.m + '</b></span></div>';
                 total += v.m;
             });
             document.getElementById('lista').innerHTML = h || "<p style='padding:15px; color:#555;'>Sin datos</p>";
@@ -162,18 +162,22 @@
         }
 
         function enviarWhatsApp() {
-            if (hist.length === 0) { alert("No hay datos."); return; }
-            
-            var mensaje = "REPORTE DETALLADO DE RUTA%0A";
+            if (hist.length === 0) return alert("Sin datos.");
+            var mensaje = "REPORTE DE RUTA - DESGLOSADO%0A";
             mensaje += "----------------------------%0A";
             
             hist.forEach(function(v) {
                 mensaje += ""+ v.n + "ª " + v.d + "%0A";
-                if(v.det.p14 > 0) mensaje += "• " + v.det.p14 + " pax de $14%0A";
-                if(v.det.p55 > 0) mensaje += "• " + v.det.p55 + " pax de $55%0A";
-                if(v.det.p47 > 0) mensaje += "• " + v.det.p47 + " pax de $47%0A";
-                if(v.det.p37 > 0) mensaje += "• " + v.det.p37 + " pax de $37%0A";
-                if(v.det.exM > 0) mensaje += "• Cobro Libre: $" + v.det.exM + " ("+v.det.exP+" pax)%0A";
+                if(v.det.p14 > 0) mensaje += "• " + v.det.p14 + " de $14%0A";
+                if(v.det.p55 > 0) mensaje += "• " + v.det.p55 + " de $55%0A";
+                if(v.det.p47 > 0) mensaje += "• " + v.det.p47 + " de $47%0A";
+                if(v.det.p37 > 0) mensaje += "• " + v.det.p37 + " de $37%0A";
+                
+                // DESGLOSE DE COBROS LIBRES
+                v.det.libres.forEach(function(l) {
+                    mensaje += "• " + l.c + " de $" + l.p + " (Libre)%0A";
+                });
+                
                 mensaje += "Subtotal: $" + v.m + "%0A%0A";
             });
             
