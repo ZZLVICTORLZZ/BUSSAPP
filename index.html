@@ -5,163 +5,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BusCount - Completo</title>
+    <title>BusCount V5</title>
     <style>
-        :root { --p: #ff9800; --bg: #000; --c: #1a1a1a; --txt: #fff; }
-        body { background: var(--bg); color: var(--txt); font-family: sans-serif; margin: 0; padding: 15px; text-align: center; }
-        
+        :root { --p: #ff9800; --bg: #000; --c: #1a1a1a; }
+        body { background: var(--bg); color: #fff; font-family: sans-serif; margin: 0; padding: 10px; text-align: center; }
         .pantalla { display: none; }
         .activa { display: block !important; }
-        
-        .tarjeta { background: var(--c); padding: 15px; border-radius: 15px; border: 1px solid #333; margin-bottom: 12px; }
-        
-        .letrero-vuelta { font-size: 1.5rem; color: var(--p); font-weight: bold; text-transform: uppercase; margin-bottom: 10px; }
-        
-        .selector-destino {
-            background: #222; color: var(--p); border: 1px solid var(--p);
-            padding: 12px; width: 100%; font-size: 1.2rem; font-weight: bold;
-            border-radius: 10px; margin-bottom: 10px; text-align: center;
-        }
-
-        .monto-actual { font-size: 3.5rem; color: var(--p); font-weight: bold; margin: 10px 0; }
-        
-        .btn { border: none; padding: 18px; border-radius: 12px; font-weight: bold; width: 100%; margin-top: 10px; cursor: pointer; font-size: 1.1rem; }
+        .tarjeta { background: var(--c); padding: 15px; border-radius: 15px; border: 1px solid #333; margin-bottom: 10px; }
+        .btn { border: none; padding: 18px; border-radius: 12px; font-weight: bold; width: 100%; margin-top: 10px; font-size: 1.1rem; cursor: pointer; }
         .btn-naranja { background: var(--p); color: #000; }
         .btn-gris { background: #333; color: #fff; }
         .btn-azul { background: #0288d1; color: #fff; }
         .btn-rojo { background: #b71c1c; color: #fff; }
-
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .campo { background: #222; padding: 10px; border-radius: 10px; border: 1px solid #444; }
-        input { background: #000; color: var(--p); border: 1px solid var(--p); padding: 10px; width: 80%; font-size: 1.6rem; text-align: center; border-radius: 8px; }
-        label { display: block; font-size: 0.8rem; color: #888; margin-bottom: 5px; font-weight: bold; }
-
-        .fila-historial { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #333; font-size: 1.1rem; }
+        input { background: #000; color: var(--p); border: 1px solid var(--p); padding: 10px; width: 80%; font-size: 1.5rem; text-align: center; border-radius: 8px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        select { background: #222; color: var(--p); border: 1px solid var(--p); padding: 12px; width: 100%; font-size: 1.2rem; border-radius: 10px; }
     </style>
 </head>
-<body onload="iniciar()">
+<body onload="iniciarApp()">
 
-    <div id="pantalla-cobro" class="pantalla activa">
+    <div style="font-size: 0.8rem; color: #444;">VERSIÓN 5.0 - REVISIÓN TOTAL</div>
+
+    <div id="p-reg" class="pantalla activa">
         <div class="tarjeta">
-            <div id="txt-vuelta-grande" class="letrero-vuelta">1ª MEDIA VUELTA</div>
-            
-            <select id="sel-destino" class="selector-destino">
+            <h2 id="txt-v" style="color:var(--p); margin:0;">1ª MEDIA VUELTA</h2>
+            <select id="sel-d" style="margin-top:10px;">
                 <option value="INDIOS VERDES">INDIOS VERDES</option>
                 <option value="NUEVOS PASEOS">NUEVOS PASEOS</option>
                 <option value="REYES">REYES</option>
             </select>
-            
-            <div class="monto-actual">$<span id="suma-pantalla">0</span></div>
-            <div id="log-libre" style="font-size: 0.8rem; color: #0288d1;"></div>
+            <div style="font-size: 3.5rem; font-weight: bold; color: var(--p);">$<span id="t-v">0</span></div>
+            <div id="log-ex" style="font-size: 0.9rem; color: #0288d1;"></div>
         </div>
 
         <div class="tarjeta">
             <div class="grid">
-                <div class="campo"><label>$14</label><input type="number" id="v14" oninput="sumar()"></div>
-                <div class="campo"><label>$55</label><input type="number" id="v55" oninput="sumar()"></div>
-                <div class="campo"><label>$47</label><input type="number" id="v47" oninput="sumar()"></div>
-                <div class="campo"><label>$37</label><input type="number" id="v37" oninput="sumar()"></div>
+                <div><label>$14</label><br><input type="number" id="i14" oninput="sumar()"></div>
+                <div><label>$55</label><br><input type="number" id="i55" oninput="sumar()"></div>
+                <div><label>$47</label><br><input type="number" id="i47" oninput="sumar()"></div>
+                <div><label>$37</label><br><input type="number" id="i37" oninput="sumar()"></div>
             </div>
-
-            <div style="margin-top:15px; border-top: 1px solid #444; padding-top:15px;">
-                <label style="color: #888; margin-bottom: 10px; display: block;">COBRO LIBRE / EXTRA:</label>
+            <div style="margin-top:15px; border-top:1px solid #333; padding-top:10px;">
+                <label style="color:#888;">COBRO LIBRE</label>
                 <div class="grid">
-                    <input type="number" id="precio-l" placeholder="$ Precio" inputmode="numeric">
-                    <input type="number" id="cant-l" placeholder="Cant." inputmode="numeric">
+                    <input type="number" id="l-p" placeholder="Precio">
+                    <input type="number" id="l-c" placeholder="Cant.">
                 </div>
-                <button class="btn btn-azul" onclick="agregarManual()">+ AGREGAR EXTRA</button>
+                <button class="btn btn-azul" onclick="agregarLibre()">+ AGREGAR COBRO LIBRE</button>
             </div>
         </div>
 
-        <button class="btn btn-naranja" onclick="guardarTodo()">FINALIZAR VUELTA</button>
-        <button class="btn btn-gris" onclick="verP('pantalla-resumen')">LIBRO DE RUTA</button>
+        <button class="btn btn-naranja" onclick="finalizar()">FINALIZAR VUELTA</button>
+        <button class="btn btn-gris" onclick="irA('p-lib')">VER LIBRO DE RUTA</button>
     </div>
 
-    <div id="pantalla-resumen" class="pantalla">
+    <div id="p-lib" class="pantalla">
         <div class="tarjeta">
             <h2>RESUMEN DEL DÍA</h2>
-            <div id="total-dia" style="font-size: 2.5rem; color: var(--p); font-weight: bold;">$0</div>
+            <div id="t-dia" style="font-size: 2.5rem; color:var(--p); font-weight:bold;">$0</div>
         </div>
-        <div id="lista-v" class="tarjeta" style="padding:0; text-align:left;"></div>
-        <button class="btn btn-naranja" onclick="verP('pantalla-cobro')">VOLVER</button>
-        <button class="btn btn-rojo" onclick="borrarTodo()">REINICIAR DÍA</button>
+        <div id="lista" class="tarjeta" style="padding:0; text-align:left;"></div>
+        <button class="btn btn-naranja" onclick="irA('p-reg')">VOLVER A COBRAR</button>
+        <button class="btn btn-rojo" onclick="reset()">BORRAR TODO EL DÍA</button>
     </div>
 
     <script>
-        let nVuelta = parseInt(localStorage.getItem('bus_v_n')) || 1;
-        let historial = JSON.parse(localStorage.getItem('bus_v_h')) || [];
-        let montoLibreAcumulado = 0;
+        // MEMORIA
+        var numV = parseInt(localStorage.getItem('v_n')) || 1;
+        var hist = JSON.parse(localStorage.getItem('v_h')) || [];
+        var extra = 0;
 
-        function iniciar() {
-            actualizarUI();
+        function iniciarApp() {
+            render();
         }
 
         function sumar() {
-            let f14 = (document.getElementById('v14').value || 0) * 14;
-            let f55 = (document.getElementById('v55').value || 0) * 55;
-            let f47 = (document.getElementById('v47').value || 0) * 47;
-            let f37 = (document.getElementById('v37').value || 0) * 37;
-            
-            let total = f14 + f55 + f47 + f37 + montoLibreAcumulado;
-            document.getElementById('suma-pantalla').innerText = total;
+            var v14 = (document.getElementById('i14').value || 0) * 14;
+            var v55 = (document.getElementById('i55').value || 0) * 55;
+            var v47 = (document.getElementById('i47').value || 0) * 47;
+            var v37 = (document.getElementById('i37').value || 0) * 37;
+            document.getElementById('t-v').innerText = (v14 + v55 + v47 + v37 + extra);
         }
 
-        function agregarManual() {
-            let p = parseFloat(document.getElementById('precio-l').value) || 0;
-            let c = parseInt(document.getElementById('cant-l').value) || 0;
-            
+        function agregarLibre() {
+            var p = parseFloat(document.getElementById('l-p').value) || 0;
+            var c = parseInt(document.getElementById('l-c').value) || 0;
             if (p > 0 && c > 0) {
-                montoLibreAcumulado += (p * c);
-                document.getElementById('log-libre').innerText = "Extras: +$" + montoLibreAcumulado;
-                document.getElementById('precio-l').value = "";
-                document.getElementById('cant-l').value = "";
+                extra += (p * c);
+                document.getElementById('log-ex').innerText = "Extras: +$" + extra;
+                document.getElementById('l-p').value = "";
+                document.getElementById('l-c').value = "";
                 sumar();
             }
         }
 
-        function guardarTodo() {
-            let totalActual = parseInt(document.getElementById('suma-pantalla').innerText);
-            let destino = document.getElementById('sel-destino').value;
-
-            if (totalActual === 0 && !confirm("¿Guardar con $0?")) return;
-
-            historial.push({ n: nVuelta, d: destino, m: totalActual });
-            localStorage.setItem('bus_v_h', JSON.stringify(historial));
+        function finalizar() {
+            var m = parseInt(document.getElementById('t-v').innerText);
+            var d = document.getElementById('sel-d').value;
             
-            nVuelta++;
-            localStorage.setItem('bus_v_n', nVuelta);
+            if (m === 0) { if(!confirm("¿Guardar en $0?")) return; }
+
+            hist.push({n: numV, d: d, m: m});
+            localStorage.setItem('v_h', JSON.stringify(hist));
+            
+            numV++;
+            localStorage.setItem('v_n', numV);
             
             // Limpiar
-            document.querySelectorAll('input').forEach(i => i.value = "");
-            montoLibreAcumulado = 0;
-            document.getElementById('log-libre').innerText = "";
+            document.getElementById('i14').value=""; document.getElementById('i55').value="";
+            document.getElementById('i47').value=""; document.getElementById('i37').value="";
+            extra = 0;
+            document.getElementById('log-ex').innerText = "";
             
-            verP('pantalla-resumen');
+            irA('p-lib');
         }
 
-        function actualizarUI() {
-            document.getElementById('txt-vuelta-grande').innerText = nVuelta + "ª MEDIA VUELTA";
-            
-            let html = ""; let sumaD = 0;
-            historial.forEach(v => {
-                html += <div class="fila-historial"><span><b>${v.n}ª</b> ${v.d}</span><span>$${v.m}</span></div>;
-                sumaD += v.m;
+        function render() {
+            document.getElementById('txt-v').innerText = numV + "ª MEDIA VUELTA";
+            var h = ""; var total = 0;
+            hist.forEach(function(v) {
+                h += '<div style="display:flex; justify-content:space-between; padding:12px; border-bottom:1px solid #333;">' +
+                     '<span><b>' + v.n + 'ª</b> ' + v.d + '</span><span>$' + v.m + '</span></div>';
+                total += v.m;
             });
-
-            document.getElementById('lista-v').innerHTML = html || "<p style='padding:15px;'>Sin registros</p>";
-            document.getElementById('total-dia').innerText = "$" + sumaD;
+            document.getElementById('lista').innerHTML = h || "<p style='padding:15px;'>Sin datos</p>";
+            document.getElementById('t-dia').innerText = "$" + total;
             sumar();
         }
 
-        function verP(id) {
-            document.getElementById('pantalla-cobro').classList.remove('activa');
-            document.getElementById('pantalla-resumen').classList.remove('activa');
+        function irA(id) {
+            document.getElementById('p-reg').classList.remove('activa');
+            document.getElementById('p-lib').classList.remove('activa');
             document.getElementById(id).classList.add('activa');
-            actualizarUI();
+            render();
         }
 
-        function borrarTodo() {
-            if (confirm("¿Borrar todo el día?")) {
+        function reset() {
+            if (confirm("¿Borrar todo?")) {
                 localStorage.clear();
                 location.reload();
             }
@@ -169,5 +149,4 @@
     </script>
 </body>
 </html>
-
 
