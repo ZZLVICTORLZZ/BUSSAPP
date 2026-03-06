@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BusCount V5.4 - Desglose Libre</title>
+    <title>BusCount V5.5 - Ajuste Visual</title>
     <style>
         :root { --p: #00e5ff; --bg: #000; --c: #1a1a1a; --wa: #25d366; }
         body { background: var(--bg); color: #fff; font-family: sans-serif; margin: 0; padding: 10px; text-align: center; }
@@ -18,41 +18,48 @@
         .btn-gris { background: #333; color: #fff; }
         .btn-wa { background: var(--wa); color: #000; }
         .btn-rojo { background: #b71c1c; color: #fff; }
-        input { background: #000; color: var(--p); border: 1px solid var(--p); padding: 10px; width: 80%; font-size: 1.5rem; text-align: center; border-radius: 8px; }
+
+        /* AJUSTE: Total de efectivo más chico */
+        .monto-vuelta { font-size: 2.6rem; font-weight: bold; color: var(--p); margin: 5px 0; }
+        
+        /* AJUSTE: Precios y etiquetas más grandes */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .grid label { color: #888; font-size: 1.1rem; font-weight: bold; display: block; margin-bottom: 4px; }
+        input { background: #000; color: var(--p); border: 1px solid var(--p); padding: 12px; width: 85%; font-size: 1.9rem; text-align: center; border-radius: 8px; font-weight: bold; }
+        
         select { background: #222; color: var(--p); border: 1px solid var(--p); padding: 12px; width: 100%; font-size: 1.2rem; border-radius: 10px; }
     </style>
 </head>
 <body onload="iniciarApp()">
 
-    <div style="font-size: 0.8rem; color: #444;">VERSIÓN 5.4 - DESGLOSE COMPLETO</div>
+    <div style="font-size: 0.7rem; color: #444; margin-bottom: 5px;">VERSIÓN 5.5 - TAMAÑOS OPTIMIZADOS</div>
 
     <div id="p-reg" class="pantalla activa">
         <div class="tarjeta">
-            <h2 id="txt-v" style="color:var(--p); margin:0;">1ª MEDIA VUELTA</h2>
+            <h2 id="txt-v" style="color:var(--p); margin:0; font-size: 1.3rem;">1ª MEDIA VUELTA</h2>
             <select id="sel-d" style="margin-top:10px;">
                 <option value="INDIOS VERDES">INDIOS VERDES</option>
                 <option value="NUEVOS PASEOS">NUEVOS PASEOS</option>
                 <option value="REYES">REYES</option>
             </select>
-            <div style="font-size: 3.5rem; font-weight: bold; color: var(--p);">$<span id="t-v">0</span></div>
+            <div class="monto-vuelta">$<span id="t-v">0</span></div>
             <div id="log-ex" style="font-size: 0.8rem; color: #00e5ff; height: 1.2rem;"></div>
         </div>
 
         <div class="tarjeta">
             <div class="grid">
-                <div><label style="color:#888; font-size:0.8rem;">$14</label><br><input type="number" id="i14" oninput="sumar()"></div>
-                <div><label style="color:#888; font-size:0.8rem;">$55</label><br><input type="number" id="i55" oninput="sumar()"></div>
-                <div><label style="color:#888; font-size:0.8rem;">$47</label><br><input type="number" id="i47" oninput="sumar()"></div>
-                <div><label style="color:#888; font-size:0.8rem;">$37</label><br><input type="number" id="i37" oninput="sumar()"></div>
+                <div><label>$14</label><input type="number" id="i14" oninput="sumar()" placeholder="0"></div>
+                <div><label>$55</label><input type="number" id="i55" oninput="sumar()" placeholder="0"></div>
+                <div><label>$47</label><input type="number" id="i47" oninput="sumar()" placeholder="0"></div>
+                <div><label>$37</label><input type="number" id="i37" oninput="sumar()" placeholder="0"></div>
             </div>
-            <div style="margin-top:15px; border-top:1px solid #333; padding-top:10px;">
-                <label style="color:#888;">COBRO LIBRE</label>
+            <div style="margin-top:15px; border-top:1px solid #333; padding-top:15px;">
+                <label style="color:#888; font-size: 0.9rem;">COBRO LIBRE</label>
                 <div class="grid">
-                    <input type="number" id="l-p" placeholder="Precio">
-                    <input type="number" id="l-c" placeholder="Cant.">
+                    <input type="number" id="l-p" placeholder="$" style="font-size: 1.5rem;">
+                    <input type="number" id="l-c" placeholder="#" style="font-size: 1.5rem;">
                 </div>
-                <button class="btn btn-gris" style="color:var(--p)" onclick="agregarLibre()">+ AGREGAR COBRO LIBRE</button>
+                <button class="btn btn-gris" style="color:var(--p); padding: 12px;" onclick="agregarLibre()">+ AGREGAR COBRO LIBRE</button>
             </div>
         </div>
 
@@ -66,7 +73,6 @@
             <div id="t-dia" style="font-size: 2.5rem; color:var(--p); font-weight:bold;">$0</div>
         </div>
         <div id="lista" class="tarjeta" style="padding:0; text-align:left;"></div>
-        
         <button class="btn btn-wa" onclick="enviarWhatsApp()">✅ ENVIAR REPORTE WHATSAPP</button>
         <button class="btn btn-turquesa" onclick="irA('p-reg')">VOLVER A COBRAR</button>
         <button class="btn btn-rojo" onclick="reset()">BORRAR TODO EL DÍA</button>
@@ -75,7 +81,7 @@
     <script>
         var numV = parseInt(localStorage.getItem('v_n')) || 1;
         var hist = JSON.parse(localStorage.getItem('v_h')) || [];
-        var libresActuales = []; // Lista de cobros libres de la vuelta actual
+        var libresActuales = [];
 
         function iniciarApp() { render(); }
 
@@ -84,10 +90,8 @@
                         (document.getElementById('i55').value || 0) * 55 +
                         (document.getElementById('i47').value || 0) * 47 +
                         (document.getElementById('i37').value || 0) * 37;
-            
             var totalLibres = 0;
             libresActuales.forEach(function(l) { totalLibres += (l.p * l.c); });
-            
             document.getElementById('t-v').innerText = (fijos + totalLibres);
         }
 
@@ -106,28 +110,20 @@
         function finalizar() {
             var m = parseInt(document.getElementById('t-v').innerText);
             var d = document.getElementById('sel-d').value;
-            
             var c14 = parseInt(document.getElementById('i14').value) || 0;
             var c55 = parseInt(document.getElementById('i55').value) || 0;
             var c47 = parseInt(document.getElementById('i47').value) || 0;
             var c37 = parseInt(document.getElementById('i37').value) || 0;
-
             if (m === 0 && !confirm("¿Guardar en $0?")) return;
-
-            // Calculamos total de pasajeros
             var tPax = c14 + c55 + c47 + c37;
             libresActuales.forEach(function(l) { tPax += l.c; });
-
             hist.push({
                 n: numV, d: d, m: m, pTot: tPax,
                 det: { p14: c14, p55: c55, p47: c47, p37: c37, libres: [...libresActuales] }
             });
-
             localStorage.setItem('v_h', JSON.stringify(hist));
             numV++;
             localStorage.setItem('v_n', numV);
-            
-            // Limpiar
             document.getElementById('i14').value=""; document.getElementById('i55').value="";
             document.getElementById('i47').value=""; document.getElementById('i37').value="";
             libresActuales = []; document.getElementById('log-ex').innerText = "";
@@ -142,7 +138,7 @@
                      '<span><b>' + v.n + 'ª</b> ' + v.d + '</span><span>' + v.pTot + ' pax | <b>$' + v.m + '</b></span></div>';
                 total += v.m;
             });
-            document.getElementById('lista').innerHTML = h || "<p style='padding:15px; color:#555;'>Sin datos</p>";
+            document.getElementById('lista').innerHTML = h || "<p style='padding:15px; color:#555;'>Sin datos registrados</p>";
             document.getElementById('t-dia').innerText = "$" + total;
             sumar();
         }
@@ -165,22 +161,15 @@
             if (hist.length === 0) return alert("Sin datos.");
             var mensaje = "REPORTE DE RUTA - DESGLOSADO%0A";
             mensaje += "----------------------------%0A";
-            
             hist.forEach(function(v) {
                 mensaje += ""+ v.n + "ª " + v.d + "%0A";
                 if(v.det.p14 > 0) mensaje += "• " + v.det.p14 + " de $14%0A";
                 if(v.det.p55 > 0) mensaje += "• " + v.det.p55 + " de $55%0A";
                 if(v.det.p47 > 0) mensaje += "• " + v.det.p47 + " de $47%0A";
                 if(v.det.p37 > 0) mensaje += "• " + v.det.p37 + " de $37%0A";
-                
-                // DESGLOSE DE COBROS LIBRES
-                v.det.libres.forEach(function(l) {
-                    mensaje += "• " + l.c + " de $" + l.p + " (Libre)%0A";
-                });
-                
+                v.det.libres.forEach(function(l) { mensaje += "• " + l.c + " de $" + l.p + " (Libre)%0A"; });
                 mensaje += "Subtotal: $" + v.m + "%0A%0A";
             });
-            
             mensaje += "----------------------------%0A";
             mensaje += "TOTAL DEL DÍA: " + document.getElementById('t-dia').innerText + "";
             window.open("https://wa.me/?text=" + mensaje, "_blank");
