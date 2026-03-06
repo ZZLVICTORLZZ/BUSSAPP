@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BusCount V5.5 - Ajuste Visual</title>
+    <title>BusCount V5.7 - Ajuste Orden</title>
     <style>
         :root { --p: #00e5ff; --bg: #000; --c: #1a1a1a; --wa: #25d366; }
         body { background: var(--bg); color: #fff; font-family: sans-serif; margin: 0; padding: 10px; text-align: center; }
@@ -19,12 +19,11 @@
         .btn-wa { background: var(--wa); color: #000; }
         .btn-rojo { background: #b71c1c; color: #fff; }
 
-        /* AJUSTE: Total de efectivo más chico */
         .monto-vuelta { font-size: 2.6rem; font-weight: bold; color: var(--p); margin: 5px 0; }
         
-        /* AJUSTE: Precios y etiquetas más grandes */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .grid label { color: #888; font-size: 1.1rem; font-weight: bold; display: block; margin-bottom: 4px; }
+        .grid label { color: var(--p); font-size: 1.1rem; font-weight: bold; display: block; margin-bottom: 4px; }
+        
         input { background: #000; color: var(--p); border: 1px solid var(--p); padding: 12px; width: 85%; font-size: 1.9rem; text-align: center; border-radius: 8px; font-weight: bold; }
         
         select { background: #222; color: var(--p); border: 1px solid var(--p); padding: 12px; width: 100%; font-size: 1.2rem; border-radius: 10px; }
@@ -32,7 +31,7 @@
 </head>
 <body onload="iniciarApp()">
 
-    <div style="font-size: 0.7rem; color: #444; margin-bottom: 5px;">VERSIÓN 5.5 - TAMAÑOS OPTIMIZADOS</div>
+    <div style="font-size: 0.7rem; color: #333; margin-bottom: 5px;">VERSIÓN 5.7 - ORDEN DE BOTONES</div>
 
     <div id="p-reg" class="pantalla activa">
         <div class="tarjeta">
@@ -43,7 +42,7 @@
                 <option value="REYES">REYES</option>
             </select>
             <div class="monto-vuelta">$<span id="t-v">0</span></div>
-            <div id="log-ex" style="font-size: 0.8rem; color: #00e5ff; height: 1.2rem;"></div>
+            <div id="log-ex" style="font-size: 0.8rem; color: var(--p); height: 1.2rem;"></div>
         </div>
 
         <div class="tarjeta">
@@ -54,7 +53,7 @@
                 <div><label>$37</label><input type="number" id="i37" oninput="sumar()" placeholder="0"></div>
             </div>
             <div style="margin-top:15px; border-top:1px solid #333; padding-top:15px;">
-                <label style="color:#888; font-size: 0.9rem;">COBRO LIBRE</label>
+                <label style="color: var(--p); font-size: 0.9rem; font-weight: bold;">COBRO LIBRE</label>
                 <div class="grid">
                     <input type="number" id="l-p" placeholder="$" style="font-size: 1.5rem;">
                     <input type="number" id="l-c" placeholder="#" style="font-size: 1.5rem;">
@@ -73,8 +72,9 @@
             <div id="t-dia" style="font-size: 2.5rem; color:var(--p); font-weight:bold;">$0</div>
         </div>
         <div id="lista" class="tarjeta" style="padding:0; text-align:left;"></div>
-        <button class="btn btn-wa" onclick="enviarWhatsApp()">✅ ENVIAR REPORTE WHATSAPP</button>
+        
         <button class="btn btn-turquesa" onclick="irA('p-reg')">VOLVER A COBRAR</button>
+        <button class="btn btn-wa" onclick="enviarWhatsApp()">✅ ENVIAR REPORTE WHATSAPP</button>
         <button class="btn btn-rojo" onclick="reset()">BORRAR TODO EL DÍA</button>
     </div>
 
@@ -100,7 +100,7 @@
             var c = parseInt(document.getElementById('l-c').value) || 0;
             if (p > 0 && c > 0) {
                 libresActuales.push({p: p, c: c});
-                document.getElementById('log-ex').innerText = "Extra agregado: $" + (p*c);
+                document.getElementById('log-ex').innerText = "Extra: +$" + (p*c);
                 document.getElementById('l-p').value = "";
                 document.getElementById('l-c').value = "";
                 sumar();
@@ -177,3 +177,4 @@
     </script>
 </body>
 </html>
+
